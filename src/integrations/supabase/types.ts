@@ -14,16 +14,157 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      features: {
+        Row: {
+          build_specs: Json
+          created_at: string
+          engine: string | null
+          feature_number: number
+          gallery_images: Json
+          hero_image: string | null
+          id: string
+          make: string
+          model: string | null
+          owner_instagram: string
+          publish_date: string
+          published: boolean
+          sponsors: Json
+          story: string | null
+          title: string
+          truck_year: number | null
+          updated_at: string
+        }
+        Insert: {
+          build_specs?: Json
+          created_at?: string
+          engine?: string | null
+          feature_number: number
+          gallery_images?: Json
+          hero_image?: string | null
+          id?: string
+          make: string
+          model?: string | null
+          owner_instagram: string
+          publish_date?: string
+          published?: boolean
+          sponsors?: Json
+          story?: string | null
+          title: string
+          truck_year?: number | null
+          updated_at?: string
+        }
+        Update: {
+          build_specs?: Json
+          created_at?: string
+          engine?: string | null
+          feature_number?: number
+          gallery_images?: Json
+          hero_image?: string | null
+          id?: string
+          make?: string
+          model?: string | null
+          owner_instagram?: string
+          publish_date?: string
+          published?: boolean
+          sponsors?: Json
+          story?: string | null
+          title?: string
+          truck_year?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          build_list: string | null
+          created_at: string
+          email: string
+          engine: string | null
+          id: string
+          instagram: string
+          make: string
+          model: string | null
+          name: string
+          photo_urls: Json
+          status: Database["public"]["Enums"]["submission_status"]
+          story: string | null
+          suspension: string | null
+          truck_year: number | null
+          wheel_setup: string | null
+        }
+        Insert: {
+          build_list?: string | null
+          created_at?: string
+          email: string
+          engine?: string | null
+          id?: string
+          instagram: string
+          make: string
+          model?: string | null
+          name: string
+          photo_urls?: Json
+          status?: Database["public"]["Enums"]["submission_status"]
+          story?: string | null
+          suspension?: string | null
+          truck_year?: number | null
+          wheel_setup?: string | null
+        }
+        Update: {
+          build_list?: string | null
+          created_at?: string
+          email?: string
+          engine?: string | null
+          id?: string
+          instagram?: string
+          make?: string
+          model?: string | null
+          name?: string
+          photo_urls?: Json
+          status?: Database["public"]["Enums"]["submission_status"]
+          story?: string | null
+          suspension?: string | null
+          truck_year?: number | null
+          wheel_setup?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
+      submission_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +291,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+      submission_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
