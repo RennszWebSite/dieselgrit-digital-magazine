@@ -12,7 +12,10 @@ export const Route = createFileRoute("/_authenticated")({
       .eq("user_id", data.user.id)
       .eq("role", "admin")
       .maybeSingle();
-    if (!roleRow) throw redirect({ to: "/auth", search: { unauthorized: 1 } });
+    if (!roleRow) {
+      await supabase.auth.signOut();
+      throw redirect({ to: "/auth" });
+    }
     return { user: data.user };
   },
   component: () => <Outlet />,
