@@ -20,6 +20,7 @@ import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 import { Route as FeaturesNumberRouteImport } from './routes/features.$number'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminFeaturesNewRouteImport } from './routes/_authenticated/admin.features.new'
 import { Route as AuthenticatedAdminFeaturesIdRouteImport } from './routes/_authenticated/admin.features.$id'
 
@@ -77,6 +78,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPartnersRoute =
+  AuthenticatedAdminPartnersRouteImport.update({
+    id: '/partners',
+    path: '/partners',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminFeaturesNewRoute =
   AuthenticatedAdminFeaturesNewRouteImport.update({
     id: '/features/new',
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/features/$number': typeof FeaturesNumberRoute
   '/features/': typeof FeaturesIndexRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -112,6 +120,7 @@ export interface FileRoutesByTo {
   '/submit': typeof SubmitRoute
   '/features/$number': typeof FeaturesNumberRoute
   '/features': typeof FeaturesIndexRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -128,6 +137,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/features/$number': typeof FeaturesNumberRoute
   '/features/': typeof FeaturesIndexRoute
+  '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/_authenticated/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/features/$number'
     | '/features/'
+    | '/admin/partners'
     | '/admin/'
     | '/admin/features/$id'
     | '/admin/features/new'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/submit'
     | '/features/$number'
     | '/features'
+    | '/admin/partners'
     | '/admin'
     | '/admin/features/$id'
     | '/admin/features/new'
@@ -171,6 +183,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/features/$number'
     | '/features/'
+    | '/_authenticated/admin/partners'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/features/$id'
     | '/_authenticated/admin/features/new'
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/partners': {
+      id: '/_authenticated/admin/partners'
+      path: '/partners'
+      fullPath: '/admin/partners'
+      preLoaderRoute: typeof AuthenticatedAdminPartnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/features/new': {
       id: '/_authenticated/admin/features/new'
       path: '/features/new'
@@ -283,12 +303,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminFeaturesIdRoute: typeof AuthenticatedAdminFeaturesIdRoute
   AuthenticatedAdminFeaturesNewRoute: typeof AuthenticatedAdminFeaturesNewRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminFeaturesIdRoute: AuthenticatedAdminFeaturesIdRoute,
   AuthenticatedAdminFeaturesNewRoute: AuthenticatedAdminFeaturesNewRoute,
