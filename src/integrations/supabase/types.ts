@@ -14,63 +14,153 @@ export type Database = {
   }
   public: {
     Tables: {
+      build_partners: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          instagram: string | null
+          logo_url: string | null
+          name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          instagram?: string | null
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          instagram?: string | null
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      feature_partners: {
+        Row: {
+          created_at: string
+          feature_id: string
+          partner_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          feature_id: string
+          partner_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          feature_id?: string
+          partner_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_partners_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "features"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feature_partners_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "build_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       features: {
         Row: {
           build_specs: Json
+          category: string | null
           created_at: string
           engine: string | null
           feature_number: number
           gallery_images: Json
           hero_image: string | null
           id: string
+          instagram_post_url: string | null
           make: string
           model: string | null
           owner_instagram: string
           publish_date: string
           published: boolean
+          seo_description: string | null
+          seo_title: string | null
+          slug: string | null
           sponsors: Json
+          status: string
           story: string | null
           title: string
           truck_year: number | null
           updated_at: string
+          view_count: number
         }
         Insert: {
           build_specs?: Json
+          category?: string | null
           created_at?: string
           engine?: string | null
           feature_number: number
           gallery_images?: Json
           hero_image?: string | null
           id?: string
+          instagram_post_url?: string | null
           make: string
           model?: string | null
           owner_instagram: string
           publish_date?: string
           published?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
           sponsors?: Json
+          status?: string
           story?: string | null
           title: string
           truck_year?: number | null
           updated_at?: string
+          view_count?: number
         }
         Update: {
           build_specs?: Json
+          category?: string | null
           created_at?: string
           engine?: string | null
           feature_number?: number
           gallery_images?: Json
           hero_image?: string | null
           id?: string
+          instagram_post_url?: string | null
           make?: string
           model?: string | null
           owner_instagram?: string
           publish_date?: string
           published?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
           sponsors?: Json
+          status?: string
           story?: string | null
           title?: string
           truck_year?: number | null
           updated_at?: string
+          view_count?: number
         }
         Relationships: []
       }
