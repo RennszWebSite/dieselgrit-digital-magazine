@@ -19,6 +19,24 @@ export type Feature = {
   sponsors: { name: string; url?: string }[];
   created_at: string;
   updated_at: string;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  instagram_post_url?: string | null;
+  status?: string | null;
+  view_count?: number | null;
+  category?: string | null;
+};
+
+export type BuildPartner = {
+  id: string;
+  name: string;
+  instagram: string | null;
+  website: string | null;
+  logo_url: string | null;
+  category: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type Submission = {
@@ -125,3 +143,30 @@ export function publicImageUrl(path: string | null | undefined, bucket = "featur
   if (path.startsWith("http")) return path;
   return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
+
+export const buildPartnersQuery = () =>
+  queryOptions({
+    queryKey: ["build_partners"],
+    queryFn: async (): Promise<BuildPartner[]> => {
+      const { data, error } = await supabase
+        .from("build_partners")
+        .select("*")
+        .order("name", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as unknown as BuildPartner[];
+    },
+  });
+
+export const featurePartnerIdsQuery = (featureId: string) =>
+  queryOptions({
+    queryKey: ["feature_partners", featureId],
+    queryFn: async (): Promise<string[]> => {
+      const { data, error } = await supabase
+        .from("feature_partners")
+        .select("partner_id, sort_order")
+        .eq("feature_id", featureId)
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((r) => r.partner_id as string);
+    },
+  });
