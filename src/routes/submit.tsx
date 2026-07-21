@@ -104,7 +104,7 @@ function SubmitPage() {
 
   if (done) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <SiteNav />
         <div className="px-6 pt-40 pb-20 text-center">
           <div className="mx-auto grid size-16 place-items-center rounded-full border border-gold text-gold">
@@ -125,7 +125,7 @@ function SubmitPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <header className="px-6 pt-28 pb-8">
         <p className="text-eyebrow text-gold">Submit</p>

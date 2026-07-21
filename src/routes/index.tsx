@@ -33,7 +33,7 @@ function Home() {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground">
       <SiteNav />
 
       {/* Hero */}

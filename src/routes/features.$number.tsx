@@ -65,7 +65,7 @@ export const Route = createFileRoute("/features/$number")({
     };
   },
   notFoundComponent: () => (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <div className="px-6 pt-40 pb-20 text-center">
         <p className="text-eyebrow text-gold">404</p>
@@ -77,7 +77,7 @@ export const Route = createFileRoute("/features/$number")({
     </div>
   ),
   errorComponent: ({ error, reset }) => (
-    <div className="min-h-screen bg-background px-6 pt-40 text-center">
+    <div className="min-h-screen px-6 pt-40 text-center">
       <SiteNav />
       <h1 className="font-display text-3xl">Something went wrong</h1>
       <p className="mt-2 text-sm text-white/60">{error.message}</p>
@@ -112,7 +112,7 @@ function FeatureDetail() {
   const readMinutes = f.story ? Math.max(1, Math.round(f.story.split(/\s+/).length / 220)) : 0;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <ReadingProgress />
 
