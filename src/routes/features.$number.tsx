@@ -6,6 +6,7 @@ import { SiteNav, SiteFooter } from "@/components/site-nav";
 import {
   featureByNumberQuery,
   featurePartnersDetailsQuery,
+  relatedFeaturesQuery,
   publicImageUrl,
 } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
@@ -98,6 +99,9 @@ function FeatureDetail() {
   const specs = f.build_specs ?? [];
   const sponsors = f.sponsors ?? [];
   const { data: partners = [] } = useQuery(featurePartnersDetailsQuery(f.id));
+  const { data: related = [] } = useQuery(
+    relatedFeaturesQuery(f.id, { category: f.category ?? null, make: f.make ?? null }),
+  );
 
   useEffect(() => {
     supabase.rpc("increment_feature_views", { _feature_number: f.feature_number }).then(() => {});
@@ -307,6 +311,39 @@ function FeatureDetail() {
           <div className="p-6 text-right text-eyebrow text-white/20">Latest</div>
         )}
       </nav>
+      {related.length > 0 && (
+        <section className="border-t border-white/5 px-6 py-16">
+          <p className="text-eyebrow text-gold">More From The Archive</p>
+          <ul className="mt-6 grid grid-cols-2 gap-3">
+            {related.slice(0, 4).map((r) => (
+              <li key={r.id}>
+                <Link
+                  to="/features/$number"
+                  params={{ number: String(r.feature_number) }}
+                  className="group block"
+                >
+                  <div className="aspect-[4/5] overflow-hidden bg-white/5">
+                    {r.hero_image && (
+                      <img
+                        src={publicImageUrl(r.hero_image) ?? ""}
+                        alt={r.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                  </div>
+                  <p className="mt-2 text-eyebrow text-gold">
+                    Nº {String(r.feature_number).padStart(3, "0")}
+                  </p>
+                  <h3 className="mt-0.5 line-clamp-2 font-display text-base leading-tight">
+                    {r.title}
+                  </h3>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <SiteFooter />
     </div>
   );
