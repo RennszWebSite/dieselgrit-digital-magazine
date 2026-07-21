@@ -251,6 +251,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_feature_views: {
+        Args: { _feature_number: number }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin"
