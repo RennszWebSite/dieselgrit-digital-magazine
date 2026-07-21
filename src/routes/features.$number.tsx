@@ -6,6 +6,7 @@ import { SiteNav, SiteFooter } from "@/components/site-nav";
 import {
   featureByNumberQuery,
   featurePartnersDetailsQuery,
+  relatedFeaturesQuery,
   publicImageUrl,
 } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
@@ -98,6 +99,9 @@ function FeatureDetail() {
   const specs = f.build_specs ?? [];
   const sponsors = f.sponsors ?? [];
   const { data: partners = [] } = useQuery(featurePartnersDetailsQuery(f.id));
+  const { data: related = [] } = useQuery(
+    relatedFeaturesQuery(f.id, { category: f.category ?? null, make: f.make ?? null }),
+  );
 
   useEffect(() => {
     supabase.rpc("increment_feature_views", { _feature_number: f.feature_number }).then(() => {});
