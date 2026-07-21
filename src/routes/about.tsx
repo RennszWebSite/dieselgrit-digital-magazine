@@ -23,7 +23,7 @@ export const Route = createFileRoute("/about")({
 
 function About() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <section className="px-6 pt-28 pb-16">
         <p className="text-eyebrow text-gold">About the Publication</p>

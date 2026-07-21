@@ -37,7 +37,7 @@ export const Route = createFileRoute("/giveaways/$slug")({
     };
   },
   notFoundComponent: () => (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <div className="px-6 pt-40 pb-20 text-center">
         <p className="text-eyebrow text-gold">404</p>
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/giveaways/$slug")({
     </div>
   ),
   errorComponent: ({ error, reset }) => (
-    <div className="min-h-screen bg-background px-6 pt-40 text-center">
+    <div className="min-h-screen px-6 pt-40 text-center">
       <SiteNav />
       <h1 className="font-display text-3xl">Something went wrong</h1>
       <p className="mt-2 text-sm text-white/60">{error.message}</p>
@@ -75,7 +75,7 @@ function GiveawayDetail() {
   const closed = endsMs <= Date.now() || !g.active;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
 
       <section className="relative h-svh min-h-[560px]">

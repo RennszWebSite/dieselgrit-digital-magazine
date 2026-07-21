@@ -32,7 +32,7 @@ function GiveawaysIndex() {
   const closed = giveaways.filter((g) => new Date(g.ends_at).getTime() <= now);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <header className="px-6 pt-28 pb-8">
         <p className="text-eyebrow text-gold">The Prize Board</p>

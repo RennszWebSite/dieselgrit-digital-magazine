@@ -33,7 +33,7 @@ function SavedPage() {
     .filter(Boolean) as typeof features;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteNav />
       <header className="px-6 pt-28 pb-6">
         <p className="text-eyebrow text-gold">Your Garage</p>
