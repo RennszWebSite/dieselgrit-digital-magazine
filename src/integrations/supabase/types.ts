@@ -312,6 +312,7 @@ export type Database = {
           contact_email: string | null
           created_at: string
           effect_intensity: number
+          favicon_url: string | null
           footer_note: string | null
           homepage_intro: string | null
           id: string
@@ -328,6 +329,7 @@ export type Database = {
           contact_email?: string | null
           created_at?: string
           effect_intensity?: number
+          favicon_url?: string | null
           footer_note?: string | null
           homepage_intro?: string | null
           id?: string
@@ -344,6 +346,7 @@ export type Database = {
           contact_email?: string | null
           created_at?: string
           effect_intensity?: number
+          favicon_url?: string | null
           footer_note?: string | null
           homepage_intro?: string | null
           id?: string
