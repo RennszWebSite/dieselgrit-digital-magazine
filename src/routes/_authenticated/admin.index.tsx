@@ -55,27 +55,20 @@ function AdminDashboard() {
       .limit(1)
       .maybeSingle();
     const nextNum = (max?.feature_number ?? 0) + 1;
-    const {
-      id: _id,
-      created_at: _c,
-      updated_at: _u,
-      feature_number: _n,
-      slug: _s,
-      view_count: _v,
-      ...rest
-    } = src as Record<string, unknown> & { id: string };
-    void _id; void _c; void _u; void _n; void _s; void _v;
+    const clone: Record<string, unknown> = { ...(src as Record<string, unknown>) };
+    delete clone.id;
+    delete clone.created_at;
+    delete clone.updated_at;
+    delete clone.slug;
+    clone.feature_number = nextNum;
+    clone.title = `${(src as { title: string }).title} (Copy)`;
+    clone.published = false;
+    clone.status = "draft";
+    clone.view_count = 0;
     const { data: inserted, error } = await supabase
       .from("features")
-      .insert({
-        ...rest,
-        feature_number: nextNum,
-        title: `${(rest as { title: string }).title} (Copy)`,
-        published: false,
-        status: "draft",
-        view_count: 0,
-        slug: null,
-      })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .insert(clone as any)
       .select("id")
       .maybeSingle();
     if (error) return toast.error(error.message);
