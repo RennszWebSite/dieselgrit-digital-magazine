@@ -20,6 +20,10 @@ export function SeasonalEffect() {
   const intensity = Math.max(0, Math.min(100, settings?.effect_intensity ?? 50));
 
   if (!effect || effect === "none") return null;
+  if (typeof window !== "undefined") {
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (mq?.matches) return null;
+  }
   return <EffectCanvas effect={effect} intensity={intensity} />;
 }
 
