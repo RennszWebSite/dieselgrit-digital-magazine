@@ -9,7 +9,7 @@ export function Ticker({ features }: Props) {
     ? features.slice(0, 8).map(
         (f) =>
           `Nº ${String(f.feature_number).padStart(3, "0")} — ${f.title}${
-            f.owner_name ? ` · ${f.owner_name}` : ""
+            f.owner_instagram ? ` · @${f.owner_instagram.replace(/^@/, "")}` : ""
           }`,
       )
     : [
