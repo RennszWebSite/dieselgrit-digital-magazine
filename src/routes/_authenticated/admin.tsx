@@ -26,6 +26,12 @@ function AdminLayout() {
           <Link to="/admin/partners" className="text-eyebrow text-white/60">
             Partners
           </Link>
+          <Link to="/admin/announcements" className="text-eyebrow text-white/60">
+            Alerts
+          </Link>
+          <Link to="/admin/settings" className="text-eyebrow text-white/60">
+            Settings
+          </Link>
           <Link to="/" className="text-eyebrow text-white/60">
             View site
           </Link>

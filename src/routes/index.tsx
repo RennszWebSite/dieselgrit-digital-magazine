@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight } from "lucide-react";
 import { SiteNav, SiteFooter } from "@/components/site-nav";
-import { publishedFeaturesQuery, publicImageUrl } from "@/lib/queries";
+import { publishedFeaturesQuery, publicImageUrl, siteSettingsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { data: features = [] } = useQuery(publishedFeaturesQuery());
+  const { data: settings } = useQuery(siteSettingsQuery());
   const latest = features[0];
   const recent = features.slice(1, 5);
 
@@ -47,7 +48,9 @@ function Home() {
             REAL <span className="italic text-gold">GRIT.</span>
           </h1>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
-            An editorial publication documenting the world's most uncompromising diesel builds.
+            {settings?.homepage_intro ||
+              settings?.tagline ||
+              "An editorial publication documenting the world's most uncompromising diesel builds."}
           </p>
           <div className="mt-8 flex flex-col gap-3">
             <Link

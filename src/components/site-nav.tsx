@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { siteSettingsQuery } from "@/lib/queries";
 
 const NAV = [
   { to: "/features", label: "Features" },
@@ -97,14 +99,37 @@ export function SiteNav() {
 }
 
 export function SiteFooter() {
+  const { data: settings } = useQuery(siteSettingsQuery());
+  const socials: { href: string; label: string }[] = [];
+  if (settings?.social_instagram)
+    socials.push({
+      href: `https://instagram.com/${settings.social_instagram.replace("@", "")}`,
+      label: "Instagram",
+    });
+  if (settings?.social_youtube) socials.push({ href: settings.social_youtube, label: "YouTube" });
+  if (settings?.social_tiktok) socials.push({ href: settings.social_tiktok, label: "TikTok" });
   return (
     <footer className="border-t border-white/5 px-6 py-14 text-center">
-      <p className="text-eyebrow text-white/40 mb-6">DieselGrit Magazine</p>
+      <p className="text-eyebrow text-white/40 mb-6">
+        {settings?.site_title ?? "DieselGrit"} Magazine
+      </p>
       <div className="flex justify-center gap-6 mb-6 text-eyebrow text-white/60">
         <Link to="/features">Features</Link>
         <Link to="/submit">Submit</Link>
         <Link to="/about">About</Link>
       </div>
+      {socials.length > 0 && (
+        <div className="mb-6 flex justify-center gap-5 text-eyebrow text-gold">
+          {socials.map((s) => (
+            <a key={s.label} href={s.href} target="_blank" rel="noreferrer">
+              {s.label}
+            </a>
+          ))}
+        </div>
+      )}
+      {settings?.footer_note && (
+        <p className="mb-4 text-xs text-white/50">{settings.footer_note}</p>
+      )}
       <p className="text-[10px] uppercase tracking-[0.3em] text-white/20">
         © {new Date().getFullYear()} — Built with grit.
       </p>

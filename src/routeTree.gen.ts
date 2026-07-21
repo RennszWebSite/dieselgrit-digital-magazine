@@ -22,7 +22,10 @@ import { Route as GiveawaysSlugRouteImport } from './routes/giveaways.$slug'
 import { Route as FeaturesNumberRouteImport } from './routes/features.$number'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as FeaturesNumberMagazineRouteImport } from './routes/features.$number.magazine'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
+import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin.announcements'
 import { Route as AuthenticatedAdminGiveawaysIndexRouteImport } from './routes/_authenticated/admin.giveaways.index'
 import { Route as AuthenticatedAdminGiveawaysNewRouteImport } from './routes/_authenticated/admin.giveaways.new'
 import { Route as AuthenticatedAdminGiveawaysIdRouteImport } from './routes/_authenticated/admin.giveaways.$id'
@@ -93,10 +96,27 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const FeaturesNumberMagazineRoute = FeaturesNumberMagazineRouteImport.update({
+  id: '/magazine',
+  path: '/magazine',
+  getParentRoute: () => FeaturesNumberRoute,
+} as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPartnersRoute =
   AuthenticatedAdminPartnersRouteImport.update({
     id: '/partners',
     path: '/partners',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAnnouncementsRoute =
+  AuthenticatedAdminAnnouncementsRouteImport.update({
+    id: '/announcements',
+    path: '/announcements',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminGiveawaysIndexRoute =
@@ -138,11 +158,14 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/features/$number': typeof FeaturesNumberRoute
+  '/features/$number': typeof FeaturesNumberRouteWithChildren
   '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features/': typeof FeaturesIndexRoute
   '/giveaways/': typeof GiveawaysIndexRoute
+  '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/features/$number/magazine': typeof FeaturesNumberMagazineRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -156,11 +179,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
-  '/features/$number': typeof FeaturesNumberRoute
+  '/features/$number': typeof FeaturesNumberRouteWithChildren
   '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features': typeof FeaturesIndexRoute
   '/giveaways': typeof GiveawaysIndexRoute
+  '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/features/$number/magazine': typeof FeaturesNumberMagazineRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -178,11 +204,14 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/features/$number': typeof FeaturesNumberRoute
+  '/features/$number': typeof FeaturesNumberRouteWithChildren
   '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features/': typeof FeaturesIndexRoute
   '/giveaways/': typeof GiveawaysIndexRoute
+  '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/features/$number/magazine': typeof FeaturesNumberMagazineRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/_authenticated/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -204,7 +233,10 @@ export interface FileRouteTypes {
     | '/giveaways/$slug'
     | '/features/'
     | '/giveaways/'
+    | '/admin/announcements'
     | '/admin/partners'
+    | '/admin/settings'
+    | '/features/$number/magazine'
     | '/admin/'
     | '/admin/features/$id'
     | '/admin/features/new'
@@ -222,7 +254,10 @@ export interface FileRouteTypes {
     | '/giveaways/$slug'
     | '/features'
     | '/giveaways'
+    | '/admin/announcements'
     | '/admin/partners'
+    | '/admin/settings'
+    | '/features/$number/magazine'
     | '/admin'
     | '/admin/features/$id'
     | '/admin/features/new'
@@ -243,7 +278,10 @@ export interface FileRouteTypes {
     | '/giveaways/$slug'
     | '/features/'
     | '/giveaways/'
+    | '/_authenticated/admin/announcements'
     | '/_authenticated/admin/partners'
+    | '/_authenticated/admin/settings'
+    | '/features/$number/magazine'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/features/$id'
     | '/_authenticated/admin/features/new'
@@ -357,11 +395,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/features/$number/magazine': {
+      id: '/features/$number/magazine'
+      path: '/magazine'
+      fullPath: '/features/$number/magazine'
+      preLoaderRoute: typeof FeaturesNumberMagazineRouteImport
+      parentRoute: typeof FeaturesNumberRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/partners': {
       id: '/_authenticated/admin/partners'
       path: '/partners'
       fullPath: '/admin/partners'
       preLoaderRoute: typeof AuthenticatedAdminPartnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/announcements': {
+      id: '/_authenticated/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AuthenticatedAdminAnnouncementsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/giveaways/': {
@@ -403,7 +462,9 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAnnouncementsRoute: typeof AuthenticatedAdminAnnouncementsRoute
   AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminFeaturesIdRoute: typeof AuthenticatedAdminFeaturesIdRoute
   AuthenticatedAdminFeaturesNewRoute: typeof AuthenticatedAdminFeaturesNewRoute
@@ -413,7 +474,9 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAnnouncementsRoute: AuthenticatedAdminAnnouncementsRoute,
   AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminFeaturesIdRoute: AuthenticatedAdminFeaturesIdRoute,
   AuthenticatedAdminFeaturesNewRoute: AuthenticatedAdminFeaturesNewRoute,
@@ -436,13 +499,25 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface FeaturesNumberRouteChildren {
+  FeaturesNumberMagazineRoute: typeof FeaturesNumberMagazineRoute
+}
+
+const FeaturesNumberRouteChildren: FeaturesNumberRouteChildren = {
+  FeaturesNumberMagazineRoute: FeaturesNumberMagazineRoute,
+}
+
+const FeaturesNumberRouteWithChildren = FeaturesNumberRoute._addFileChildren(
+  FeaturesNumberRouteChildren,
+)
+
 interface FeaturesRouteChildren {
-  FeaturesNumberRoute: typeof FeaturesNumberRoute
+  FeaturesNumberRoute: typeof FeaturesNumberRouteWithChildren
   FeaturesIndexRoute: typeof FeaturesIndexRoute
 }
 
 const FeaturesRouteChildren: FeaturesRouteChildren = {
-  FeaturesNumberRoute: FeaturesNumberRoute,
+  FeaturesNumberRoute: FeaturesNumberRouteWithChildren,
   FeaturesIndexRoute: FeaturesIndexRoute,
 }
 

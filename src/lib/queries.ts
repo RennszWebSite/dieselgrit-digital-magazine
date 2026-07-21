@@ -269,3 +269,72 @@ export const giveawayEntriesQuery = (giveawayId: string) =>
       return (data ?? []) as unknown as GiveawayEntry[];
     },
   });
+
+export type SiteSettings = {
+  id: string;
+  site_title: string;
+  tagline: string | null;
+  seasonal_effect: "none" | "snow" | "embers" | "rain" | "confetti" | string;
+  effect_intensity: number;
+  accent_color: string | null;
+  social_instagram: string | null;
+  social_youtube: string | null;
+  social_tiktok: string | null;
+  contact_email: string | null;
+  footer_note: string | null;
+  homepage_intro: string | null;
+  updated_at: string;
+};
+
+export const siteSettingsQuery = () =>
+  queryOptions({
+    queryKey: ["site_settings"],
+    queryFn: async (): Promise<SiteSettings | null> => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      return (data ?? null) as SiteSettings | null;
+    },
+  });
+
+export type Announcement = {
+  id: string;
+  message: string;
+  link_url: string | null;
+  link_label: string | null;
+  style: "default" | "gold" | "alert" | string;
+  active: boolean;
+  starts_at: string | null;
+  ends_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export const activeAnnouncementsQuery = () =>
+  queryOptions({
+    queryKey: ["announcements", "active"],
+    queryFn: async (): Promise<Announcement[]> => {
+      const { data, error } = await supabase
+        .from("announcements")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as Announcement[];
+    },
+  });
+
+export const allAnnouncementsAdminQuery = () =>
+  queryOptions({
+    queryKey: ["announcements", "all-admin"],
+    queryFn: async (): Promise<Announcement[]> => {
+      const { data, error } = await supabase
+        .from("announcements")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as Announcement[];
+    },
+  });
