@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { siteSettingsQuery } from "@/lib/queries";
+import { NewsletterForm } from "@/components/newsletter-form";
 
 const NAV = [
   { to: "/features", label: "Features" },
   { to: "/giveaways", label: "Giveaways" },
+  { to: "/saved", label: "Saved" },
   { to: "/submit", label: "Submit" },
   { to: "/about", label: "About" },
 ] as const;
@@ -113,8 +115,18 @@ export function SiteFooter() {
       <p className="text-eyebrow text-white/40 mb-6">
         {settings?.site_title ?? "DieselGrit"} Magazine
       </p>
+      <div className="mx-auto mb-10 max-w-sm">
+        <p className="text-eyebrow text-gold mb-3">The Dispatch</p>
+        <p className="mb-4 text-xs text-white/50">
+          New features, giveaways, and behind-the-scenes drops — straight to your inbox.
+        </p>
+        <div className="flex justify-center">
+          <NewsletterForm />
+        </div>
+      </div>
       <div className="flex justify-center gap-6 mb-6 text-eyebrow text-white/60">
         <Link to="/features">Features</Link>
+        <Link to="/saved">Saved</Link>
         <Link to="/submit">Submit</Link>
         <Link to="/about">About</Link>
       </div>

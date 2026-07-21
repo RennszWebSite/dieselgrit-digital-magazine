@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, Eye, Instagram } from "lucide-react";
 import { SiteNav, SiteFooter } from "@/components/site-nav";
+import { ReadingProgress } from "@/components/reading-progress";
+import { FeatureActions } from "@/components/feature-actions";
 import {
   featureByNumberQuery,
   featurePartnersDetailsQuery,
@@ -112,6 +114,7 @@ function FeatureDetail() {
   return (
     <div className="min-h-screen bg-background">
       <SiteNav />
+      <ReadingProgress />
 
       <section className="relative h-svh min-h-[560px]">
         <div className="absolute inset-0">
@@ -166,6 +169,11 @@ function FeatureDetail() {
               <BookOpen className="size-3.5" /> Magazine view
             </Link>
           </div>
+          <FeatureActions
+            featureNumber={f.feature_number}
+            title={f.title}
+            initialLikes={f.like_count ?? 0}
+          />
         </div>
       </section>
 
