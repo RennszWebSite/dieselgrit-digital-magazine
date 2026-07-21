@@ -308,6 +308,13 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
           {isEdit ? "Save & Publish" : "Publish"}
         </button>
       </div>
+      {wheelOpen && (
+        <GiveawayWheel
+          entries={entries}
+          onWinner={(w) => persistWinner(w)}
+          onClose={() => setWheelOpen(false)}
+        />
+      )}
     </div>
   );
 }
