@@ -307,6 +307,7 @@ export type SiteSettings = {
   contact_email: string | null;
   footer_note: string | null;
   homepage_intro: string | null;
+  favicon_url: string | null;
   updated_at: string;
 };
 
