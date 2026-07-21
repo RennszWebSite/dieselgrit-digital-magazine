@@ -14,6 +14,8 @@ function FeaturesIndex() {
   const [q, setQ] = useState("");
   const [make, setMake] = useState<string>("all");
   const [engine, setEngine] = useState<string>("all");
+  const [category, setCategory] = useState<string>("all");
+  const [sort, setSort] = useState<"newest" | "oldest" | "popular">("newest");
 
   const makes = useMemo(
     () => Array.from(new Set(features.map((f) => f.make).filter(Boolean))).sort(),
@@ -22,6 +24,11 @@ function FeaturesIndex() {
   const engines = useMemo(
     () =>
       Array.from(new Set(features.map((f) => f.engine).filter(Boolean))).sort() as string[],
+    [features],
+  );
+  const categories = useMemo(
+    () =>
+      Array.from(new Set(features.map((f) => f.category).filter(Boolean))).sort() as string[],
     [features],
   );
 
@@ -35,7 +42,13 @@ function FeaturesIndex() {
       String(f.feature_number).includes(term.replace(/^#/, ""));
     const matchMake = make === "all" || f.make === make;
     const matchEngine = engine === "all" || f.engine === engine;
-    return matchQ && matchMake && matchEngine;
+    const matchCategory = category === "all" || f.category === category;
+    return matchQ && matchMake && matchEngine && matchCategory;
+  });
+  const sorted = [...filtered].sort((a, b) => {
+    if (sort === "popular") return (b.view_count ?? 0) - (a.view_count ?? 0);
+    if (sort === "oldest") return a.feature_number - b.feature_number;
+    return b.feature_number - a.feature_number;
   });
 
   return (
@@ -62,12 +75,23 @@ function FeaturesIndex() {
         <div className="mt-3 flex gap-2 overflow-x-auto">
           <SelectPill label="Make" value={make} onChange={setMake} options={makes} />
           <SelectPill label="Engine" value={engine} onChange={setEngine} options={engines} />
-          {(q || make !== "all" || engine !== "all") && (
+          {categories.length > 0 && (
+            <SelectPill label="Category" value={category} onChange={setCategory} options={categories} />
+          )}
+          <SelectPill
+            label="Sort"
+            value={sort}
+            onChange={(v) => setSort(v as typeof sort)}
+            options={["newest", "oldest", "popular"]}
+          />
+          {(q || make !== "all" || engine !== "all" || category !== "all" || sort !== "newest") && (
             <button
               onClick={() => {
                 setQ("");
                 setMake("all");
                 setEngine("all");
+                setCategory("all");
+                setSort("newest");
               }}
               className="shrink-0 text-eyebrow text-white/50"
             >
@@ -80,13 +104,13 @@ function FeaturesIndex() {
       <section className="px-6 py-10">
         {isLoading ? (
           <p className="text-eyebrow text-white/40">Loading archive…</p>
-        ) : filtered.length === 0 ? (
+        ) : sorted.length === 0 ? (
           <div className="py-24 text-center">
             <p className="text-eyebrow text-white/40">No features match your filters.</p>
           </div>
         ) : (
           <div className="space-y-14">
-            {filtered.map((f) => (
+            {sorted.map((f) => (
               <Link
                 key={f.id}
                 to="/features/$number"
@@ -104,6 +128,11 @@ function FeaturesIndex() {
                   <div className="absolute left-4 top-4 bg-background/80 px-3 py-1 text-[10px] font-bold tracking-widest backdrop-blur">
                     Nº {String(f.feature_number).padStart(3, "0")}
                   </div>
+                  {f.category && (
+                    <div className="absolute right-4 top-4 bg-gold px-3 py-1 text-[10px] font-bold tracking-widest text-background">
+                      {f.category}
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4 flex items-start justify-between gap-4">
                   <div className="min-w-0">

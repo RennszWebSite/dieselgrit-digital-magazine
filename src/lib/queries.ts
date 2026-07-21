@@ -170,3 +170,19 @@ export const featurePartnerIdsQuery = (featureId: string) =>
       return (data ?? []).map((r) => r.partner_id as string);
     },
   });
+
+export const featurePartnersDetailsQuery = (featureId: string) =>
+  queryOptions({
+    queryKey: ["feature_partners_details", featureId],
+    queryFn: async (): Promise<BuildPartner[]> => {
+      const { data, error } = await supabase
+        .from("feature_partners")
+        .select("sort_order, build_partners(*)")
+        .eq("feature_id", featureId)
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return (data ?? [])
+        .map((r) => (r as { build_partners: BuildPartner | null }).build_partners)
+        .filter(Boolean) as BuildPartner[];
+    },
+  });
