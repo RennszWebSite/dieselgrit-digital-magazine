@@ -1,27 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
 
 const PUBLIC_MEDIA_BUCKETS = new Set(["feature-images", "partner-logos"]);
-
-function createPublicStorageClient() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) throw new Error("Media storage is not configured");
-
-  return createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const headers = new Headers(init?.headers);
-        if (key.startsWith("sb_") && headers.get("Authorization") === `Bearer ${key}`) {
-          headers.delete("Authorization");
-        }
-        headers.set("apikey", key);
-        return fetch(input, { ...init, headers });
-      },
-    },
-  });
-}
 
 export const Route = createFileRoute("/api/public/media")({
   server: {
@@ -42,8 +21,8 @@ export const Route = createFileRoute("/api/public/media")({
         }
 
         try {
-          const storage = createPublicStorageClient();
-          const { data, error } = await storage.storage.from(bucket).download(path);
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          const { data, error } = await supabaseAdmin.storage.from(bucket).download(path);
           if (error || !data) return new Response("Media not found", { status: 404 });
 
           return new Response(await data.arrayBuffer(), {
