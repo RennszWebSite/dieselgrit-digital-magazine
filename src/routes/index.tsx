@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { SiteNav, SiteFooter } from "@/components/site-nav";
 import { publishedFeaturesQuery, publicImageUrl, siteSettingsQuery } from "@/lib/queries";
 import { Reveal, ClipReveal } from "@/components/reveal";
+import { Ticker } from "@/components/ticker";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -38,6 +39,12 @@ function Home() {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/10" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
+          <div className="dg-grain" />
+          <div
+            aria-hidden
+            className="dg-glow pointer-events-none absolute -bottom-24 left-1/2 h-64 w-[80%] -translate-x-1/2 rounded-full"
+            style={{ background: "radial-gradient(closest-side, rgba(201,168,76,0.35), transparent 70%)" }}
+          />
         </div>
 
         <div className="max-w-md">
@@ -46,7 +53,7 @@ function Home() {
             delay={200}
             className="text-eyebrow mb-4 flex w-full items-center gap-3 text-gold"
           >
-            <span className="inline-block h-px w-8 bg-gold align-middle" />
+            <span className="inline-block h-px w-8 bg-gold align-middle dg-pulse-line" />
             {latest
               ? `Volume 01 · Feature Nº ${String(latest.feature_number).padStart(3, "0")}`
               : "New Publication · Volume 01"}
@@ -56,7 +63,7 @@ function Home() {
               REAL TRUCKS.
             </Reveal>
             <Reveal as="span" delay={500} className="block">
-              REAL <span className="italic text-gold">GRIT.</span>
+              REAL <span className="italic text-gold dg-shimmer">GRIT.</span>
             </Reveal>
           </h1>
           <Reveal
@@ -91,6 +98,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <Ticker features={features} />
 
       {/* Latest featured */}
       {latest && (
