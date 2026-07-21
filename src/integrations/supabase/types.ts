@@ -133,6 +133,7 @@ export type Database = {
           hero_image: string | null
           id: string
           instagram_post_url: string | null
+          like_count: number
           make: string
           model: string | null
           owner_instagram: string
@@ -145,6 +146,7 @@ export type Database = {
           status: string
           story: string | null
           title: string
+          truck_of_month: boolean
           truck_year: number | null
           updated_at: string
           view_count: number
@@ -159,6 +161,7 @@ export type Database = {
           hero_image?: string | null
           id?: string
           instagram_post_url?: string | null
+          like_count?: number
           make: string
           model?: string | null
           owner_instagram: string
@@ -171,6 +174,7 @@ export type Database = {
           status?: string
           story?: string | null
           title: string
+          truck_of_month?: boolean
           truck_year?: number | null
           updated_at?: string
           view_count?: number
@@ -185,6 +189,7 @@ export type Database = {
           hero_image?: string | null
           id?: string
           instagram_post_url?: string | null
+          like_count?: number
           make?: string
           model?: string | null
           owner_instagram?: string
@@ -197,6 +202,7 @@ export type Database = {
           status?: string
           story?: string | null
           title?: string
+          truck_of_month?: boolean
           truck_year?: number | null
           updated_at?: string
           view_count?: number
@@ -305,6 +311,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+        }
+        Relationships: []
       }
       site_settings: {
         Row: {
@@ -446,6 +473,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_feature_likes: {
+        Args: { _feature_number: number }
+        Returns: number
       }
       increment_feature_views: {
         Args: { _feature_number: number }
