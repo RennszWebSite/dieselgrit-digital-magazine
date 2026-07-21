@@ -97,7 +97,7 @@ function MagazineView() {
           <h2 className="mt-4 font-display text-4xl leading-tight">{f.title}</h2>
           {f.story && (
             <div className="mt-6 columns-1 gap-8 text-[15px] leading-[1.7] text-black/80 sm:columns-2">
-              {f.story.split(/\n\n+/).map((p, i) => (
+              {f.story.split(/\n\n+/).map((p: string, i: number) => (
                 <p key={i} className="mb-4 break-inside-avoid">
                   {p}
                 </p>
@@ -111,7 +111,7 @@ function MagazineView() {
           <section className="page-break mt-14 print:mt-0 print:px-10 print:py-14">
             <h3 className="font-display text-2xl">Build Sheet</h3>
             <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
-              {f.build_specs.map((s, i) => (
+              {f.build_specs.map((s: { label: string; value: string }, i: number) => (
                 <div key={i} className="flex justify-between border-b border-black/10 py-2">
                   <dt className="text-[10px] uppercase tracking-widest text-black/50">{s.label}</dt>
                   <dd className="text-sm">{s.value}</dd>
@@ -124,7 +124,7 @@ function MagazineView() {
         {/* Gallery */}
         {f.gallery_images?.length > 0 && (
           <section className="page-break mt-14 grid grid-cols-1 gap-2 print:mt-0 print:grid-cols-2 print:gap-1 print:p-10">
-            {f.gallery_images.map((g, i) => {
+            {f.gallery_images.map((g: string, i: number) => {
               const src = publicImageUrl(g);
               return src ? (
                 <img
