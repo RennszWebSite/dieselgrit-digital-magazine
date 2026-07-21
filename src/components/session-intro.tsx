@@ -6,15 +6,20 @@ const WORD = "DIESELGRIT";
 const STORAGE_KEY = "dg_intro_seen_v1";
 
 export function SessionIntro() {
-  const [visible, setVisible] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    if (prefersReducedMotion()) return false;
+  // Start hidden on both server + client to avoid hydration mismatch,
+  // then flip on after mount if this session hasn't seen the intro.
+  const [visible, setVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    let seen = false;
     try {
-      return sessionStorage.getItem(STORAGE_KEY) !== "1";
+      seen = sessionStorage.getItem(STORAGE_KEY) === "1";
     } catch {
-      return false;
+      /* ignore */
     }
-  });
+    if (!seen) setVisible(true);
+  }, []);
 
   useEffect(() => {
     if (!visible) return;
