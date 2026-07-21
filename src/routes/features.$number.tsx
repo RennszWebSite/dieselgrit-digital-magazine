@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { ArrowLeft, ArrowRight, Eye, Instagram } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Eye, Instagram } from "lucide-react";
 import { SiteNav, SiteFooter } from "@/components/site-nav";
 import {
   featureByNumberQuery,
@@ -154,6 +154,13 @@ function FeatureDetail() {
                 <Eye className="size-3.5" /> {f.view_count.toLocaleString()}
               </span>
             )}
+            <Link
+              to="/features/$number/magazine"
+              params={{ number: String(f.feature_number) }}
+              className="inline-flex items-center gap-1.5 text-eyebrow text-gold"
+            >
+              <BookOpen className="size-3.5" /> Magazine view
+            </Link>
           </div>
         </div>
       </section>
