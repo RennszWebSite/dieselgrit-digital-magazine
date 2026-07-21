@@ -249,7 +249,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
               </p>
               {!winner && entries.length > 0 && (
                 <button
-                  onClick={drawWinner}
+                  onClick={() => setWheelOpen(true)}
                   className="inline-flex items-center gap-1.5 bg-gold px-3 py-2 text-eyebrow text-background"
                 >
                   <Sparkles className="size-3.5" /> Draw Winner
