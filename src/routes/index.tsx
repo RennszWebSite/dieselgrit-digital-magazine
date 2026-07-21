@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { SiteNav, SiteFooter } from "@/components/site-nav";
 import { publishedFeaturesQuery, publicImageUrl, siteSettingsQuery } from "@/lib/queries";
 import { Reveal, ClipReveal } from "@/components/reveal";
@@ -17,27 +19,49 @@ function Home() {
   const recent = features.slice(1, 5);
   const totm = features.find((f) => f.truck_of_month);
 
+  const heroRef = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  // Image drifts down slower than scroll → parallax depth
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
+  // Foreground copy drifts up faster
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       {/* Hero */}
       <section
+        ref={heroRef}
         className="relative flex min-h-[560px] flex-col justify-end px-6 pb-10"
         style={{ height: "88svh" }}
       >
         <div className="absolute inset-0 -z-10 overflow-hidden">
           {latest?.hero_image ? (
-            <img
-              src={publicImageUrl(latest.hero_image) ?? ""}
-              alt={latest.title}
-              className="dg-kenburns h-full w-full object-cover"
-              fetchPriority="high"
-            />
+            <motion.div
+              style={{ y: imageY, scale: imageScale }}
+              className="absolute inset-0 will-change-transform"
+            >
+              <img
+                src={publicImageUrl(latest.hero_image) ?? ""}
+                alt={latest.title}
+                className="dg-kenburns h-[115%] w-full object-cover"
+                fetchPriority="high"
+              />
+            </motion.div>
           ) : (
             <div className="h-full w-full bg-[radial-gradient(ellipse_at_bottom,rgba(198,161,91,0.15),transparent_60%),linear-gradient(180deg,#111_0%,#000_100%)]" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/10" />
+          <motion.div
+            style={{ opacity: overlayOpacity }}
+            className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/10"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
           <div className="dg-grain" />
           <div
@@ -47,7 +71,7 @@ function Home() {
           />
         </div>
 
-        <div className="max-w-md">
+        <motion.div style={{ y: contentY, opacity: contentOpacity }} className="max-w-md will-change-transform">
           <Reveal
             as="div"
             delay={200}
@@ -96,7 +120,7 @@ function Home() {
               </Link>
             </Reveal>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <Ticker features={features} />
