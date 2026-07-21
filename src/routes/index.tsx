@@ -14,6 +14,7 @@ function Home() {
   const { data: settings } = useQuery(siteSettingsQuery());
   const latest = features[0];
   const recent = features.slice(1, 5);
+  const totm = features.find((f) => f.truck_of_month);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -129,6 +130,36 @@ function Home() {
                 {latest.truck_year} {latest.make} {latest.model}
               </span>
               <span className="text-gold">Read Feature →</span>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {/* Truck of the Month */}
+      {totm && totm.id !== latest?.id && (
+        <section className="relative border-t border-white/5">
+          <Link
+            to="/features/$number"
+            params={{ number: String(totm.feature_number) }}
+            className="group relative block aspect-[3/4] w-full overflow-hidden bg-white/5"
+          >
+            {totm.hero_image && (
+              <img
+                src={publicImageUrl(totm.hero_image) ?? ""}
+                alt={totm.title}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-[1500ms] group-hover:scale-105"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6">
+              <p className="text-eyebrow text-gold">Truck of the Month</p>
+              <h3 className="mt-3 font-display text-4xl leading-[0.95] tracking-tight">
+                {totm.title}
+              </h3>
+              <p className="mt-2 text-eyebrow text-white/60">
+                Nº {String(totm.feature_number).padStart(3, "0")} · {totm.owner_instagram}
+              </p>
             </div>
           </Link>
         </section>
