@@ -165,7 +165,9 @@ export const submissionsQuery = () =>
 export function publicImageUrl(path: string | null | undefined, bucket = "feature-images") {
   if (!path) return null;
   if (path.startsWith("http")) return path;
-  return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+  if (bucket !== "feature-images" && bucket !== "partner-logos") return null;
+  const params = new URLSearchParams({ bucket, path });
+  return `/api/public/media?${params.toString()}`;
 }
 
 export const buildPartnersQuery = () =>
