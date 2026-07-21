@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2, Save, Sparkles, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { GiveawayWheel } from "@/components/giveaway-wheel";
 import {
   giveawayEntriesQuery,
   publicImageUrl,
@@ -47,6 +48,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
   const [g, setG] = useState<Partial<Giveaway>>(initial ?? defaults());
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [wheelOpen, setWheelOpen] = useState(false);
   const isEdit = Boolean(initial?.id);
 
   const { data: entries = [] } = useQuery({
@@ -99,11 +101,8 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
     if (!isEdit && data) navigate({ to: "/admin/giveaways/$id", params: { id: data.id } });
   }
 
-  async function drawWinner() {
-    if (entries.length === 0) return toast.error("No entries yet");
+  async function persistWinner(winner: GiveawayEntry) {
     if (!initial?.id) return;
-    const winner = entries[Math.floor(Math.random() * entries.length)];
-    if (!confirm(`Draw winner: ${winner.name} (${winner.email})?`)) return;
     const { error } = await supabase
       .from("giveaways")
       .update({ winner_entry_id: winner.id, drawn_at: new Date().toISOString(), active: false })
