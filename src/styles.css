@@ -144,14 +144,6 @@ body {
   font-weight: 600;
 }
 
-@utility h-dvh {
-  height: 100dvh;
-}
-
-@utility min-h-dvh {
-  min-height: 100dvh;
-}
-
 @utility safe-top {
   padding-top: env(safe-area-inset-top);
 }
