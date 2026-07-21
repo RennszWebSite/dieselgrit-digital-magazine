@@ -17,6 +17,7 @@ import { SeasonalEffect } from "@/components/seasonal-effect";
 import { SessionIntro } from "@/components/session-intro";
 import { PageTransition } from "@/components/page-transition";
 import { DynamicFavicon } from "@/components/dynamic-favicon";
+import { AmbientTruckBackground } from "@/components/ambient-truck-background";
 
 function NotFoundComponent() {
   return (
@@ -140,6 +141,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <DynamicFavicon />
+      <AmbientTruckBackground />
       <SessionIntro />
       <AnnouncementBanner />
       <SeasonalEffect />
