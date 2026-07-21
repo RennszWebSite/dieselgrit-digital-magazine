@@ -26,6 +26,7 @@ import { Route as FeaturesNumberMagazineRouteImport } from './routes/features.$n
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin.announcements'
+import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin.analytics'
 import { Route as AuthenticatedAdminGiveawaysIndexRouteImport } from './routes/_authenticated/admin.giveaways.index'
 import { Route as AuthenticatedAdminGiveawaysNewRouteImport } from './routes/_authenticated/admin.giveaways.new'
 import { Route as AuthenticatedAdminGiveawaysIdRouteImport } from './routes/_authenticated/admin.giveaways.$id'
@@ -119,6 +120,12 @@ const AuthenticatedAdminAnnouncementsRoute =
     path: '/announcements',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAnalyticsRoute =
+  AuthenticatedAdminAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminGiveawaysIndexRoute =
   AuthenticatedAdminGiveawaysIndexRouteImport.update({
     id: '/giveaways/',
@@ -162,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features/': typeof FeaturesIndexRoute
   '/giveaways/': typeof GiveawaysIndexRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -183,6 +191,7 @@ export interface FileRoutesByTo {
   '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features': typeof FeaturesIndexRoute
   '/giveaways': typeof GiveawaysIndexRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -208,6 +217,7 @@ export interface FileRoutesById {
   '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features/': typeof FeaturesIndexRoute
   '/giveaways/': typeof GiveawaysIndexRoute
+  '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/giveaways/$slug'
     | '/features/'
     | '/giveaways/'
+    | '/admin/analytics'
     | '/admin/announcements'
     | '/admin/partners'
     | '/admin/settings'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/giveaways/$slug'
     | '/features'
     | '/giveaways'
+    | '/admin/analytics'
     | '/admin/announcements'
     | '/admin/partners'
     | '/admin/settings'
@@ -278,6 +290,7 @@ export interface FileRouteTypes {
     | '/giveaways/$slug'
     | '/features/'
     | '/giveaways/'
+    | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/announcements'
     | '/_authenticated/admin/partners'
     | '/_authenticated/admin/settings'
@@ -423,6 +436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAnnouncementsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/analytics': {
+      id: '/_authenticated/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/giveaways/': {
       id: '/_authenticated/admin/giveaways/'
       path: '/giveaways'
@@ -462,6 +482,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminAnnouncementsRoute: typeof AuthenticatedAdminAnnouncementsRoute
   AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
@@ -474,6 +495,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
   AuthenticatedAdminAnnouncementsRoute: AuthenticatedAdminAnnouncementsRoute,
   AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
