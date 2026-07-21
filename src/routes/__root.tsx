@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { AnnouncementBanner } from "@/components/announcement-banner";
 import { SeasonalEffect } from "@/components/seasonal-effect";
+import { SessionIntro } from "@/components/session-intro";
+import { PageTransition } from "@/components/page-transition";
 
 function NotFoundComponent() {
   return (
@@ -136,10 +138,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <SessionIntro />
       <AnnouncementBanner />
       <SeasonalEffect />
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div style={{ overflowX: "clip" }}>
+        <PageTransition>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </PageTransition>
+      </div>
       <Toaster />
     </QueryClientProvider>
   );

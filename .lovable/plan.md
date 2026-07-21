@@ -1,69 +1,63 @@
-# DieselGrit Upgrade — Phased Plan
+# DieselGrit — Cinematic Redesign Plan
 
-You asked for everything. That's ~20 distinct feature areas. Shipping it all in a single turn would produce shallow, buggy versions of each and risk breaking the site you already run. Instead, I'll ship it in **6 phases**, each self-contained, tested on mobile, and purely additive — no existing routes, tables, buckets, submissions, or admin functions are removed or renamed.
+This is 4–6 sessions of work. Rebuilding it all in one shot risks breaking the admin, publishing flow, and mobile stability you already depend on. I'll ship it in ordered phases, each self-contained and mobile-verified before moving on.
 
-## Guardrails (apply to every phase)
+## Phase 0 — Mobile stability audit (ship first, no visual redesign)
+Foundation for everything else. Zero horizontal scroll, no layout shift, safe-area aware.
 
-- All new tables are new — existing `features`, `submissions`, `user_roles` are untouched.
-- New columns on `features` are nullable with safe defaults; old rows keep working.
-- New admin pages live under `/admin/*` alongside current ones.
-- Every UI is mobile-first and tested at 393px.
-- RLS on every new table; admin-only writes via `has_role`.
+- Add `overflow-x: clip` on `html, body`, wrap route outlet in a clipped container.
+- Swap `100vh` → `100dvh` / `100svh` across hero, menu, intro, magazine view.
+- Replace `100vw` with `100%` where used; audit every `w-screen`.
+- Reserve image dimensions (`aspect-ratio` + width/height) on hero, cards, gallery to kill CLS.
+- Safe-area padding on nav, banners, submit form CTA.
+- `prefers-reduced-motion` respected globally (already partially done in seasonal-effect).
+- Fix any `transform: translateX` blocks that leak past viewport.
 
-## Phase 1 — Admin Overhaul + Instagram Caption Import + Build Partners
+## Phase 1 — Motion foundation
+- Install `gsap` (+ ScrollTrigger) and `framer-motion`.
+- Create `src/lib/motion.ts` with shared easings, durations, reveal presets, and a `useReveal()` hook (IntersectionObserver → GSAP). One system, reused.
+- `<PageTransition>` wrapper in `__root.tsx`: black panel wipe with DIESELGRIT wordmark between routes. No white flash.
+- `<SessionIntro>`: full-screen loader, letter-by-letter wordmark, gold progress line, `sessionStorage` gate so returning visits skip it.
+- `<Reveal>` primitive: masked upward line/word reveal, staggered variants for cards, clip-path variants for images.
 
-New/changed:
-- `features` gains: `slug`, `seo_title`, `seo_description`, `instagram_post_url`, `status` (`draft|published`), `view_count`, `category`.
-- Table `build_partners` (name, instagram, website, logo, category) + `feature_partners` join.
-- New feature editor: multi-upload with drag-reorder (dnd-kit), hero picker, per-image crop (react-easy-crop), live preview, save-draft, duplicate-from-previous, auto next number, auto today's date, one-click publish.
-- "Paste Instagram Caption" box → regex parser extracts @owner, @tagged partners, truck year/make/model/engine keywords, story body.
-- Partner picker (searchable, multi-select) replaces free-text sponsors — old `sponsors` JSON kept for back-compat.
+## Phase 2 — Homepage art direction
+- Full-bleed hero: featured truck image, cinematic gradient, slow Ken-Burns zoom (transform-only), timed sequence for issue nº → headline → dek → CTAs.
+- Animated stats strip (features / brands / engines / reach) with IntersectionObserver counters.
+- Pinned editorial section (one, sparingly) — desktop pins text while images cross-transition; on mobile it degrades to stacked reveals.
+- Horizontal feature showcase driven by vertical scroll, wrapped in `overflow-x: clip` container, disabled under 640px.
+- Latest-features grid: large image cards with tap feedback + image zoom on mobile, cursor-follow parallax on desktop.
 
-## Phase 2 — Homepage + Feature Pages + Search/Filters + SEO
+## Phase 3 — Navigation, cursor, buttons
+- Full-screen editorial menu overlay: staggered link reveal, background image swap per hovered link, body scroll lock, safe-area aware close.
+- Desktop-only custom cursor (`matchMedia('(pointer: fine)')`), grows on links/images/buttons, disabled on touch.
+- Magnetic primary buttons on desktop (subtle, ~8px range); tactile scale-press on mobile. Applied to a shared `<CTA>` component so it doesn't sprawl.
 
-- Homepage rewrite: new hero copy/buttons, sections for Latest / Featured of the Week / Popular / Trending / Recently Added / Browse by Make / Browse by Engine / Build Partners / community welcome block. Order/text driven by site-settings (Phase 5).
-- Feature page: larger hero, improved gallery (swipeable + lightbox), specs, story, clickable IG links, related builds (same make/engine), share buttons (native + copy), view counter (RPC increment), reading-time estimate, "Submit your build" CTA footer.
-- Global search page + make/engine/category filter chips.
-- Auto SEO per feature: title, meta desc, OG/Twitter tags, `Article` JSON-LD, sitemap already dynamic — extended.
+## Phase 4 — Feature page as digital magazine
+- Oversized editorial hero with clip-path reveal.
+- Sticky story metadata rail (desktop) / condensed sticky header (mobile).
+- Animated spec list (staggered rows, gold divider draw-in).
+- Elegant image placeholders (dominant-color or blurred low-res) → fade to full.
+- Related trucks block already present — restyle to match new card system.
 
-## Phase 3 — Giveaway System + Reusable Countdown
+## Phase 5 — Archive + Submit + Micro-interactions
+- Archive: filters for Cummins / Duramax / Power Stroke / lifted / lowered / performance / show truck / daily driver. Framer Motion `AnimatePresence` layout for filter/sort changes. (Requires small data addition — see Technical.)
+- Submit: multi-step guided flow with progress bar, transitions between steps, image previews, validation, cinematic success screen. Reuses existing Zod schema.
+- Micro-interactions pass: arrows, counters, category labels, form fields, menu icons, social links.
 
-Tables: `giveaways`, `giveaway_entries`, `giveaway_draws`, `giveaway_winners`, `countdowns`.
-- Admin: create/draft/publish giveaway, upload prize photo, sponsors, rules, dates.
-- Entries: manual add, paste-list, CSV upload, dedupe, exclude list, keyword/tag rules. Instagram auto-import is gated behind official Meta Graph API — I'll scaffold the connector hook but ship manual+paste+CSV as the working path (documented clearly in UI). No scraping.
-- Branded animated wheel (canvas), configurable colors/logo/sponsors/sound/speed, confetti, full-screen mobile mode.
-- Draw: locks entries, records winner + timestamp + entry count (audit), backup winners, admin-confirm redraw.
-- Winner announcement generator: Story + Square PNG using real prize photo + logo.
-- Reusable countdown component usable in hero, banner, giveaway page, feature page, popup, with end-actions (hide/replace/open wheel/redirect).
+## Phase 6 — Performance & polish
+- Lazy-load below-fold sections (`React.lazy` + `<ClientOnly>` where needed).
+- Verify GSAP contexts are torn down on unmount; no stacked animation systems per element.
+- Real iPhone Safari check via Playwright at 390×844: horizontal scroll test, CLS check, motion-reduced check.
+- Lighthouse pass on hero LCP (preload hero image via route `head().links`).
 
-## Phase 4 — Magazine Generator + Feature Pack
+## Technical notes
+- **No breaking changes** to Supabase schema, storage, admin routes, or publishing flow. Everything is additive on the frontend.
+- **One tiny migration in Phase 5**: add `tags text[]` (or reuse `category`) on `features` so archive filters can hit Cummins/Duramax/etc. without a rebuild. Will confirm with you before running.
+- **Bundle cost**: GSAP + ScrollTrigger + Framer Motion ≈ 60kb gz. Acceptable for this brief; code-split heavy scroll scenes.
+- **Animation split**: GSAP/ScrollTrigger for scroll-driven scenes (pinning, horizontal scroll, reveals). Framer Motion for route transitions, menu, filter list. Never both on the same element.
+- **Mobile guardrails baked into `motion.ts`**: `isTouch`, `prefersReduced`, `isSmallViewport` helpers so each effect self-disables cleanly.
 
-- Client-side canvas generator (no AI images) using uploaded truck photos only.
-- 5 templates: Diesel Magazine, Premium Editorial, Show Truck, Off-Road, Minimal Modern.
-- Sizes: 1080×1920 Story, 1080×1080 Square.
-- Editable text layers (move, resize, font swap, headline edit), photo swap from feature gallery, live preview, PNG download.
-- "Generate Feature Pack" button on any published feature: creates both graphics + prewritten caption + hashtags + tagged partners + shareable link, all in one modal.
+## Order of delivery
+I'll start with **Phase 0 + Phase 1** in the next turn (stability + motion foundation + intro + page transitions). That alone will already feel dramatically more premium, and every later phase plugs into it. After you see it live on your iPhone, I move to Phase 2.
 
-## Phase 5 — Website Settings + Seasonal Effects + Announcements
-
-Tables: `site_settings` (single-row JSON), `announcements`, `seasonal_effects`.
-- Settings editor: colors (theme tokens), fonts (curated pairs), logo, favicon, header/footer text and links, nav items, homepage section order+visibility+copy, button styles, card styles, shadow intensity, animation intensity, featured-of-the-week override, homepage banners.
-- Runtime applies settings via CSS variables + a `SiteSettingsProvider`. Safe fallback to current design if a setting is missing.
-- Seasonal effects: snow, christmas lights, falling leaves, rain, fireworks, confetti, hearts, sparkles, halloween fog. Lightweight canvas, RAF-throttled, mobile toggle, date-window scheduling, intensity/speed sliders.
-- Announcement banner manager: color, icon, button, link, expiration; renders sitewide.
-
-## Phase 6 — Analytics + Future-Feature Scaffolding
-
-- `page_views` table + RPC. Admin analytics: total views, most-viewed truck, most-searched terms (`search_log` table), submission count, returning-visitor estimate (localStorage cookie), top makes, top partners.
-- Scaffolding (tables + admin stubs, no public surfaces yet, safe to ship): `truck_of_the_month_votes`, `favorites`, `brand_pages`, `shop_pages`, `events`, `magazine_issues`, `merch_items`, `sponsor_pages`, `newsletter_subscribers`, optional `profiles` for user accounts. Public routes ship in later phases when you're ready.
-
-## Technical Notes
-
-- New deps: `@dnd-kit/*`, `react-easy-crop`, `zod` (already), `date-fns` (already).
-- Zero destructive migrations. Every migration includes GRANTs + RLS + admin policies via `public.has_role`.
-- All admin writes stay under `/_authenticated/admin/*`; RLS enforces `admin` role server-side.
-- Mobile-first Tailwind, keeps existing black/white/gold tokens; Site Settings extends them non-destructively.
-
-## What I need from you
-
-Reply **"start phase 1"** (or name any phase to jump to) and I'll build it end-to-end. Each phase is one focused delivery; when it's landed and you've kicked the tires on your phone, we move to the next.
+Reply "go" to start Phase 0 + 1, or tell me to reorder / drop anything.
