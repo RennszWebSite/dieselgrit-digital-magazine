@@ -132,14 +132,14 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
           <input
             value={g.title ?? ""}
             onChange={(e) => update("title", e.target.value)}
-            className="input"
+            className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
           />
         </Field>
         <Field label="Subtitle">
           <input
             value={g.subtitle ?? ""}
             onChange={(e) => update("subtitle", e.target.value)}
-            className="input"
+            className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
           />
         </Field>
         <Field label="URL Slug" hint="auto-generated from title if blank">
@@ -147,7 +147,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
             value={g.slug ?? ""}
             onChange={(e) => update("slug", e.target.value)}
             placeholder={g.title ? toSlug(g.title) : "auto"}
-            className="input"
+            className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
           />
         </Field>
         <Field label="Prize">
@@ -155,7 +155,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
             value={g.prize ?? ""}
             onChange={(e) => update("prize", e.target.value)}
             placeholder="e.g. Set of AMP Research bed steps"
-            className="input"
+            className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
           />
         </Field>
         <Field label="Prize Value (optional)">
@@ -163,7 +163,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
             value={g.prize_value ?? ""}
             onChange={(e) => update("prize_value", e.target.value)}
             placeholder="$1,200"
-            className="input"
+            className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
           />
         </Field>
 
@@ -173,7 +173,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
               type="datetime-local"
               value={g.starts_at ? toInput(g.starts_at) : ""}
               onChange={(e) => update("starts_at", new Date(e.target.value).toISOString())}
-              className="input"
+              className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
             />
           </Field>
           <Field label="Ends">
@@ -181,7 +181,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
               type="datetime-local"
               value={g.ends_at ? toInput(g.ends_at) : ""}
               onChange={(e) => update("ends_at", new Date(e.target.value).toISOString())}
-              className="input"
+              className="w-full border-b border-white/15 bg-transparent py-2 text-sm outline-none focus:border-gold"
             />
           </Field>
         </div>
@@ -191,7 +191,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
             value={g.description ?? ""}
             onChange={(e) => update("description", e.target.value)}
             rows={5}
-            className="input font-body"
+            className="w-full border border-white/15 bg-transparent p-3 text-sm outline-none focus:border-gold"
           />
         </Field>
 
@@ -200,7 +200,7 @@ export function GiveawayEditor({ initial }: { initial?: Giveaway }) {
             value={g.rules ?? ""}
             onChange={(e) => update("rules", e.target.value)}
             rows={4}
-            className="input font-body"
+            className="w-full border border-white/15 bg-transparent p-3 text-sm outline-none focus:border-gold"
           />
         </Field>
 
