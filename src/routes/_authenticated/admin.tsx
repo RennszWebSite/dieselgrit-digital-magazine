@@ -20,6 +20,9 @@ function AdminLayout() {
           <span className="ml-2 text-[10px] text-white/40">Admin</span>
         </Link>
         <div className="flex items-center gap-4">
+          <Link to="/admin/giveaways" className="text-eyebrow text-white/60">
+            Giveaways
+          </Link>
           <Link to="/admin/partners" className="text-eyebrow text-white/60">
             Partners
           </Link>

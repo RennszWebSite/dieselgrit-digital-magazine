@@ -164,6 +164,109 @@ export type Database = {
         }
         Relationships: []
       }
+      giveaway_entries: {
+        Row: {
+          created_at: string
+          email: string
+          giveaway_id: string
+          id: string
+          instagram: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          giveaway_id: string
+          id?: string
+          instagram?: string | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          giveaway_id?: string
+          id?: string
+          instagram?: string | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_entries_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      giveaways: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          drawn_at: string | null
+          ends_at: string
+          entry_method: string
+          hero_image: string | null
+          id: string
+          prize: string
+          prize_value: string | null
+          rules: string | null
+          slug: string
+          starts_at: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+          winner_entry_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          drawn_at?: string | null
+          ends_at: string
+          entry_method?: string
+          hero_image?: string | null
+          id?: string
+          prize: string
+          prize_value?: string | null
+          rules?: string | null
+          slug: string
+          starts_at?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+          winner_entry_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          drawn_at?: string | null
+          ends_at?: string
+          entry_method?: string
+          hero_image?: string | null
+          id?: string
+          prize?: string
+          prize_value?: string | null
+          rules?: string | null
+          slug?: string
+          starts_at?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+          winner_entry_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaways_winner_fk"
+            columns: ["winner_entry_id"]
+            isOneToOne: false
+            referencedRelation: "giveaway_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       submissions: {
         Row: {
           build_list: string | null

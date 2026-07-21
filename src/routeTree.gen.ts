@@ -16,11 +16,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GiveawaysIndexRouteImport } from './routes/giveaways.index'
 import { Route as FeaturesIndexRouteImport } from './routes/features.index'
+import { Route as GiveawaysSlugRouteImport } from './routes/giveaways.$slug'
 import { Route as FeaturesNumberRouteImport } from './routes/features.$number'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
+import { Route as AuthenticatedAdminGiveawaysIndexRouteImport } from './routes/_authenticated/admin.giveaways.index'
+import { Route as AuthenticatedAdminGiveawaysNewRouteImport } from './routes/_authenticated/admin.giveaways.new'
+import { Route as AuthenticatedAdminGiveawaysIdRouteImport } from './routes/_authenticated/admin.giveaways.$id'
 import { Route as AuthenticatedAdminFeaturesNewRouteImport } from './routes/_authenticated/admin.features.new'
 import { Route as AuthenticatedAdminFeaturesIdRouteImport } from './routes/_authenticated/admin.features.$id'
 
@@ -58,10 +63,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GiveawaysIndexRoute = GiveawaysIndexRouteImport.update({
+  id: '/giveaways/',
+  path: '/giveaways/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeaturesIndexRoute = FeaturesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => FeaturesRoute,
+} as any)
+const GiveawaysSlugRoute = GiveawaysSlugRouteImport.update({
+  id: '/giveaways/$slug',
+  path: '/giveaways/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const FeaturesNumberRoute = FeaturesNumberRouteImport.update({
   id: '/$number',
@@ -82,6 +97,24 @@ const AuthenticatedAdminPartnersRoute =
   AuthenticatedAdminPartnersRouteImport.update({
     id: '/partners',
     path: '/partners',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminGiveawaysIndexRoute =
+  AuthenticatedAdminGiveawaysIndexRouteImport.update({
+    id: '/giveaways/',
+    path: '/giveaways/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminGiveawaysNewRoute =
+  AuthenticatedAdminGiveawaysNewRouteImport.update({
+    id: '/giveaways/new',
+    path: '/giveaways/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminGiveawaysIdRoute =
+  AuthenticatedAdminGiveawaysIdRouteImport.update({
+    id: '/giveaways/$id',
+    path: '/giveaways/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminFeaturesNewRoute =
@@ -106,11 +139,16 @@ export interface FileRoutesByFullPath {
   '/submit': typeof SubmitRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/features/$number': typeof FeaturesNumberRoute
+  '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features/': typeof FeaturesIndexRoute
+  '/giveaways/': typeof GiveawaysIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
+  '/admin/giveaways/$id': typeof AuthenticatedAdminGiveawaysIdRoute
+  '/admin/giveaways/new': typeof AuthenticatedAdminGiveawaysNewRoute
+  '/admin/giveaways/': typeof AuthenticatedAdminGiveawaysIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -119,11 +157,16 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submit': typeof SubmitRoute
   '/features/$number': typeof FeaturesNumberRoute
+  '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features': typeof FeaturesIndexRoute
+  '/giveaways': typeof GiveawaysIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
+  '/admin/giveaways/$id': typeof AuthenticatedAdminGiveawaysIdRoute
+  '/admin/giveaways/new': typeof AuthenticatedAdminGiveawaysNewRoute
+  '/admin/giveaways': typeof AuthenticatedAdminGiveawaysIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -136,11 +179,16 @@ export interface FileRoutesById {
   '/submit': typeof SubmitRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/features/$number': typeof FeaturesNumberRoute
+  '/giveaways/$slug': typeof GiveawaysSlugRoute
   '/features/': typeof FeaturesIndexRoute
+  '/giveaways/': typeof GiveawaysIndexRoute
   '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/_authenticated/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
+  '/_authenticated/admin/giveaways/$id': typeof AuthenticatedAdminGiveawaysIdRoute
+  '/_authenticated/admin/giveaways/new': typeof AuthenticatedAdminGiveawaysNewRoute
+  '/_authenticated/admin/giveaways/': typeof AuthenticatedAdminGiveawaysIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,11 +201,16 @@ export interface FileRouteTypes {
     | '/submit'
     | '/admin'
     | '/features/$number'
+    | '/giveaways/$slug'
     | '/features/'
+    | '/giveaways/'
     | '/admin/partners'
     | '/admin/'
     | '/admin/features/$id'
     | '/admin/features/new'
+    | '/admin/giveaways/$id'
+    | '/admin/giveaways/new'
+    | '/admin/giveaways/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,11 +219,16 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submit'
     | '/features/$number'
+    | '/giveaways/$slug'
     | '/features'
+    | '/giveaways'
     | '/admin/partners'
     | '/admin'
     | '/admin/features/$id'
     | '/admin/features/new'
+    | '/admin/giveaways/$id'
+    | '/admin/giveaways/new'
+    | '/admin/giveaways'
   id:
     | '__root__'
     | '/'
@@ -182,11 +240,16 @@ export interface FileRouteTypes {
     | '/submit'
     | '/_authenticated/admin'
     | '/features/$number'
+    | '/giveaways/$slug'
     | '/features/'
+    | '/giveaways/'
     | '/_authenticated/admin/partners'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/features/$id'
     | '/_authenticated/admin/features/new'
+    | '/_authenticated/admin/giveaways/$id'
+    | '/_authenticated/admin/giveaways/new'
+    | '/_authenticated/admin/giveaways/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,6 +260,8 @@ export interface RootRouteChildren {
   FeaturesRoute: typeof FeaturesRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmitRoute: typeof SubmitRoute
+  GiveawaysSlugRoute: typeof GiveawaysSlugRoute
+  GiveawaysIndexRoute: typeof GiveawaysIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -250,12 +315,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/giveaways/': {
+      id: '/giveaways/'
+      path: '/giveaways'
+      fullPath: '/giveaways/'
+      preLoaderRoute: typeof GiveawaysIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/features/': {
       id: '/features/'
       path: '/'
       fullPath: '/features/'
       preLoaderRoute: typeof FeaturesIndexRouteImport
       parentRoute: typeof FeaturesRoute
+    }
+    '/giveaways/$slug': {
+      id: '/giveaways/$slug'
+      path: '/giveaways/$slug'
+      fullPath: '/giveaways/$slug'
+      preLoaderRoute: typeof GiveawaysSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/features/$number': {
       id: '/features/$number'
@@ -285,6 +364,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/giveaways/': {
+      id: '/_authenticated/admin/giveaways/'
+      path: '/giveaways'
+      fullPath: '/admin/giveaways/'
+      preLoaderRoute: typeof AuthenticatedAdminGiveawaysIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/giveaways/new': {
+      id: '/_authenticated/admin/giveaways/new'
+      path: '/giveaways/new'
+      fullPath: '/admin/giveaways/new'
+      preLoaderRoute: typeof AuthenticatedAdminGiveawaysNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/giveaways/$id': {
+      id: '/_authenticated/admin/giveaways/$id'
+      path: '/giveaways/$id'
+      fullPath: '/admin/giveaways/$id'
+      preLoaderRoute: typeof AuthenticatedAdminGiveawaysIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/features/new': {
       id: '/_authenticated/admin/features/new'
       path: '/features/new'
@@ -307,6 +407,9 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminFeaturesIdRoute: typeof AuthenticatedAdminFeaturesIdRoute
   AuthenticatedAdminFeaturesNewRoute: typeof AuthenticatedAdminFeaturesNewRoute
+  AuthenticatedAdminGiveawaysIdRoute: typeof AuthenticatedAdminGiveawaysIdRoute
+  AuthenticatedAdminGiveawaysNewRoute: typeof AuthenticatedAdminGiveawaysNewRoute
+  AuthenticatedAdminGiveawaysIndexRoute: typeof AuthenticatedAdminGiveawaysIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -314,6 +417,9 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminFeaturesIdRoute: AuthenticatedAdminFeaturesIdRoute,
   AuthenticatedAdminFeaturesNewRoute: AuthenticatedAdminFeaturesNewRoute,
+  AuthenticatedAdminGiveawaysIdRoute: AuthenticatedAdminGiveawaysIdRoute,
+  AuthenticatedAdminGiveawaysNewRoute: AuthenticatedAdminGiveawaysNewRoute,
+  AuthenticatedAdminGiveawaysIndexRoute: AuthenticatedAdminGiveawaysIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
@@ -352,6 +458,8 @@ const rootRouteChildren: RootRouteChildren = {
   FeaturesRoute: FeaturesRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmitRoute: SubmitRoute,
+  GiveawaysSlugRoute: GiveawaysSlugRoute,
+  GiveawaysIndexRoute: GiveawaysIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
