@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          active: boolean
+          created_at: string
+          ends_at: string | null
+          id: string
+          link_label: string | null
+          link_url: string | null
+          message: string
+          starts_at: string | null
+          style: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          link_label?: string | null
+          link_url?: string | null
+          message: string
+          starts_at?: string | null
+          style?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          link_label?: string | null
+          link_url?: string | null
+          message?: string
+          starts_at?: string | null
+          style?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       build_partners: {
         Row: {
           category: string | null
@@ -266,6 +305,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      site_settings: {
+        Row: {
+          accent_color: string | null
+          contact_email: string | null
+          created_at: string
+          effect_intensity: number
+          footer_note: string | null
+          homepage_intro: string | null
+          id: string
+          seasonal_effect: string
+          site_title: string
+          social_instagram: string | null
+          social_tiktok: string | null
+          social_youtube: string | null
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string | null
+          contact_email?: string | null
+          created_at?: string
+          effect_intensity?: number
+          footer_note?: string | null
+          homepage_intro?: string | null
+          id?: string
+          seasonal_effect?: string
+          site_title?: string
+          social_instagram?: string | null
+          social_tiktok?: string | null
+          social_youtube?: string | null
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string | null
+          contact_email?: string | null
+          created_at?: string
+          effect_intensity?: number
+          footer_note?: string | null
+          homepage_intro?: string | null
+          id?: string
+          seasonal_effect?: string
+          site_title?: string
+          social_instagram?: string | null
+          social_tiktok?: string | null
+          social_youtube?: string | null
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       submissions: {
         Row: {
