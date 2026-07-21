@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Check, Copy, Edit3, Loader2, Plus, Trash2, X } from "lucide-react";
+import { Check, Copy, Edit3, Loader2, Plus, Star, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   allFeaturesAdminQuery,
@@ -10,16 +10,35 @@ import {
   type Submission,
 } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
+import { queryOptions } from "@tanstack/react-query";
+
+type Subscriber = { id: string; email: string; source: string | null; created_at: string };
+const subscribersQuery = () =>
+  queryOptions({
+    queryKey: ["newsletter_subscribers"],
+    queryFn: async (): Promise<Subscriber[]> => {
+      const { data, error } = await supabase
+        .from("newsletter_subscribers")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as Subscriber[];
+    },
+  });
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminDashboard,
 });
 
 function AdminDashboard() {
-  const [tab, setTab] = useState<"submissions" | "features">("submissions");
+  const [tab, setTab] = useState<"submissions" | "features" | "subscribers">(
+    "submissions",
+  );
   const { data: submissions = [] } = useQuery(submissionsQuery());
   const { data: features = [] } = useQuery(allFeaturesAdminQuery());
+  const { data: subscribers = [] } = useQuery(subscribersQuery());
   const qc = useQueryClient();
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const pending = submissions.filter((s) => s.status === "pending");
 
@@ -77,6 +96,84 @@ function AdminDashboard() {
     return inserted?.id;
   }
 
+  async function setTruckOfMonth(id: string) {
+    const { error: clearErr } = await supabase
+      .from("features")
+      .update({ truck_of_month: false })
+      .eq("truck_of_month", true);
+    if (clearErr) return toast.error(clearErr.message);
+    const { error } = await supabase
+      .from("features")
+      .update({ truck_of_month: true })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Truck of the Month updated");
+    qc.invalidateQueries({ queryKey: ["features"] });
+  }
+
+  function toggleSel(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function bulkPublish(published: boolean) {
+    if (!selected.size) return;
+    const ids = Array.from(selected);
+    const { error } = await supabase
+      .from("features")
+      .update({ published, status: published ? "published" : "draft" })
+      .in("id", ids);
+    if (error) return toast.error(error.message);
+    toast.success(`${ids.length} ${published ? "published" : "unpublished"}`);
+    setSelected(new Set());
+    qc.invalidateQueries({ queryKey: ["features"] });
+  }
+
+  async function bulkDelete() {
+    if (!selected.size) return;
+    if (!confirm(`Delete ${selected.size} feature(s)? This cannot be undone.`))
+      return;
+    const { error } = await supabase
+      .from("features")
+      .delete()
+      .in("id", Array.from(selected));
+    if (error) return toast.error(error.message);
+    toast.success("Deleted");
+    setSelected(new Set());
+    qc.invalidateQueries({ queryKey: ["features"] });
+  }
+
+  async function deleteSubscriber(id: string) {
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .delete()
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Removed");
+    qc.invalidateQueries({ queryKey: ["newsletter_subscribers"] });
+  }
+
+  function exportSubscribers() {
+    const rows = [
+      ["email", "source", "created_at"],
+      ...subscribers.map((s) => [s.email, s.source ?? "", s.created_at]),
+    ];
+    const csv = rows
+      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `dieselgrit-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="px-5 py-8">
       <div className="mb-6 flex items-center justify-between">
@@ -104,6 +201,12 @@ function AdminDashboard() {
         <TabBtn active={tab === "features"} onClick={() => setTab("features")}>
           Features ({features.length})
         </TabBtn>
+        <TabBtn
+          active={tab === "subscribers"}
+          onClick={() => setTab("subscribers")}
+        >
+          Dispatch ({subscribers.length})
+        </TabBtn>
       </div>
 
       {tab === "submissions" &&
@@ -124,11 +227,49 @@ function AdminDashboard() {
           </p>
         ) : (
           <div className="space-y-3">
+            {selected.size > 0 && (
+              <div className="sticky top-14 z-30 -mx-5 flex flex-wrap items-center gap-2 border-y border-gold/30 bg-background/95 px-5 py-3 backdrop-blur">
+                <span className="text-eyebrow text-gold">
+                  {selected.size} selected
+                </span>
+                <button
+                  onClick={() => bulkPublish(true)}
+                  className="ml-auto text-eyebrow text-white/80 hover:text-gold"
+                >
+                  Publish
+                </button>
+                <button
+                  onClick={() => bulkPublish(false)}
+                  className="text-eyebrow text-white/80 hover:text-gold"
+                >
+                  Unpublish
+                </button>
+                <button
+                  onClick={bulkDelete}
+                  className="text-eyebrow text-destructive"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setSelected(new Set())}
+                  className="text-eyebrow text-white/40"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
             {features.map((f) => (
               <div
                 key={f.id}
                 className="flex items-center gap-4 border border-white/10 bg-white/[0.02] p-3"
               >
+                <input
+                  type="checkbox"
+                  checked={selected.has(f.id)}
+                  onChange={() => toggleSel(f.id)}
+                  className="size-4 accent-gold"
+                  aria-label="Select"
+                />
                 <div className="size-16 shrink-0 overflow-hidden bg-white/5">
                   {f.hero_image && (
                     <img
@@ -146,10 +287,21 @@ function AdminDashboard() {
                     ) : (
                       <span className="ml-1 text-white/40">· Draft</span>
                     )}
+                    {f.truck_of_month && (
+                      <span className="ml-1 text-gold">· TotM</span>
+                    )}
                   </p>
                   <h3 className="mt-0.5 truncate font-display text-lg">{f.title}</h3>
                   <p className="truncate text-[11px] text-white/50">{f.owner_instagram}</p>
                 </div>
+                <button
+                  onClick={() => setTruckOfMonth(f.id)}
+                  className={`grid size-9 place-items-center border border-white/10 ${f.truck_of_month ? "text-gold" : "text-white/50"}`}
+                  aria-label="Set as Truck of the Month"
+                  title="Truck of the Month"
+                >
+                  <Star className={`size-4 ${f.truck_of_month ? "fill-gold" : ""}`} />
+                </button>
                 <Link
                   to="/admin/features/$id"
                   params={{ id: f.id }}
@@ -177,6 +329,53 @@ function AdminDashboard() {
             ))}
           </div>
         ))}
+
+      {tab === "subscribers" && (
+        <div>
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-eyebrow text-white/50">
+              {subscribers.length} total
+            </p>
+            {subscribers.length > 0 && (
+              <button
+                onClick={exportSubscribers}
+                className="text-eyebrow text-gold"
+              >
+                Export CSV →
+              </button>
+            )}
+          </div>
+          {subscribers.length === 0 ? (
+            <p className="text-eyebrow text-white/40">
+              No subscribers yet. The footer form is live on every page.
+            </p>
+          ) : (
+            <div className="divide-y divide-white/10 border border-white/10">
+              {subscribers.map((s) => (
+                <div
+                  key={s.id}
+                  className="flex items-center gap-3 bg-white/[0.02] p-3"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm">{s.email}</p>
+                    <p className="mt-0.5 text-[11px] text-white/40">
+                      {s.source ?? "—"} ·{" "}
+                      {new Date(s.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => deleteSubscriber(s.id)}
+                    className="text-eyebrow text-destructive"
+                    aria-label="Remove"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
