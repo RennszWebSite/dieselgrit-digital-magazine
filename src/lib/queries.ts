@@ -26,6 +26,8 @@ export type Feature = {
   status?: string | null;
   view_count?: number | null;
   category?: string | null;
+  like_count?: number | null;
+  truck_of_month?: boolean | null;
 };
 
 export type BuildPartner = {
