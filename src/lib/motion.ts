@@ -41,12 +41,18 @@ export function useInView<T extends HTMLElement>(opts?: {
         }
       },
       {
-        threshold: opts?.threshold ?? 0.18,
-        rootMargin: opts?.rootMargin ?? "0px 0px -8% 0px",
+        threshold: opts?.threshold ?? 0.01,
+        rootMargin: opts?.rootMargin ?? "0px 0px 15% 0px",
       },
     );
     io.observe(el);
-    return () => io.disconnect();
+    // Safety net: if the observer never fires (fast scroll, mobile quirks),
+    // reveal after 1.6s so nothing is left as a black gap.
+    const t = window.setTimeout(() => el.classList.add("is-in"), 1600);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(t);
+    };
   }, [opts?.threshold, opts?.rootMargin, opts?.once]);
   return ref;
 }
