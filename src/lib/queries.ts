@@ -186,3 +186,86 @@ export const featurePartnersDetailsQuery = (featureId: string) =>
         .filter(Boolean) as BuildPartner[];
     },
   });
+
+export type Giveaway = {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  prize: string;
+  prize_value: string | null;
+  hero_image: string | null;
+  rules: string | null;
+  entry_method: string;
+  starts_at: string;
+  ends_at: string;
+  active: boolean;
+  winner_entry_id: string | null;
+  drawn_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GiveawayEntry = {
+  id: string;
+  giveaway_id: string;
+  name: string;
+  email: string;
+  instagram: string | null;
+  created_at: string;
+};
+
+export const activeGiveawaysQuery = () =>
+  queryOptions({
+    queryKey: ["giveaways", "active"],
+    queryFn: async (): Promise<Giveaway[]> => {
+      const { data, error } = await supabase
+        .from("giveaways")
+        .select("*")
+        .eq("active", true)
+        .order("ends_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as unknown as Giveaway[];
+    },
+  });
+
+export const giveawayBySlugQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["giveaways", "by-slug", slug],
+    queryFn: async (): Promise<Giveaway | null> => {
+      const { data } = await supabase
+        .from("giveaways")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
+      return (data ?? null) as Giveaway | null;
+    },
+  });
+
+export const allGiveawaysAdminQuery = () =>
+  queryOptions({
+    queryKey: ["giveaways", "all-admin"],
+    queryFn: async (): Promise<Giveaway[]> => {
+      const { data, error } = await supabase
+        .from("giveaways")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as Giveaway[];
+    },
+  });
+
+export const giveawayEntriesQuery = (giveawayId: string) =>
+  queryOptions({
+    queryKey: ["giveaway_entries", giveawayId],
+    queryFn: async (): Promise<GiveawayEntry[]> => {
+      const { data, error } = await supabase
+        .from("giveaway_entries")
+        .select("*")
+        .eq("giveaway_id", giveawayId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as GiveawayEntry[];
+    },
+  });
