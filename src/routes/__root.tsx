@@ -16,6 +16,7 @@ import { AnnouncementBanner } from "@/components/announcement-banner";
 import { SeasonalEffect } from "@/components/seasonal-effect";
 import { SessionIntro } from "@/components/session-intro";
 import { PageTransition } from "@/components/page-transition";
+import { DynamicFavicon } from "@/components/dynamic-favicon";
 
 function NotFoundComponent() {
   return (
@@ -138,6 +139,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <DynamicFavicon />
       <SessionIntro />
       <AnnouncementBanner />
       <SeasonalEffect />
