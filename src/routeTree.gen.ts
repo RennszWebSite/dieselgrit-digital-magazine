@@ -22,6 +22,7 @@ import { Route as GiveawaysSlugRouteImport } from './routes/giveaways.$slug'
 import { Route as FeaturesNumberRouteImport } from './routes/features.$number'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminGiveawaysIndexRouteImport } from './routes/_authenticated/admin.giveaways.index'
 import { Route as AuthenticatedAdminGiveawaysNewRouteImport } from './routes/_authenticated/admin.giveaways.new'
@@ -93,6 +94,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPartnersRoute =
   AuthenticatedAdminPartnersRouteImport.update({
     id: '/partners',
@@ -143,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/features/': typeof FeaturesIndexRoute
   '/giveaways/': typeof GiveawaysIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -161,6 +169,7 @@ export interface FileRoutesByTo {
   '/features': typeof FeaturesIndexRoute
   '/giveaways': typeof GiveawaysIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -183,6 +192,7 @@ export interface FileRoutesById {
   '/features/': typeof FeaturesIndexRoute
   '/giveaways/': typeof GiveawaysIndexRoute
   '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
   '/_authenticated/admin/features/new': typeof AuthenticatedAdminFeaturesNewRoute
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/features/'
     | '/giveaways/'
     | '/admin/partners'
+    | '/admin/settings'
     | '/admin/'
     | '/admin/features/$id'
     | '/admin/features/new'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/giveaways'
     | '/admin/partners'
+    | '/admin/settings'
     | '/admin'
     | '/admin/features/$id'
     | '/admin/features/new'
@@ -244,6 +256,7 @@ export interface FileRouteTypes {
     | '/features/'
     | '/giveaways/'
     | '/_authenticated/admin/partners'
+    | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/features/$id'
     | '/_authenticated/admin/features/new'
@@ -357,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/partners': {
       id: '/_authenticated/admin/partners'
       path: '/partners'
@@ -404,6 +424,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnersRoute: typeof AuthenticatedAdminPartnersRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminFeaturesIdRoute: typeof AuthenticatedAdminFeaturesIdRoute
   AuthenticatedAdminFeaturesNewRoute: typeof AuthenticatedAdminFeaturesNewRoute
@@ -414,6 +435,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPartnersRoute: AuthenticatedAdminPartnersRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminFeaturesIdRoute: AuthenticatedAdminFeaturesIdRoute,
   AuthenticatedAdminFeaturesNewRoute: AuthenticatedAdminFeaturesNewRoute,
