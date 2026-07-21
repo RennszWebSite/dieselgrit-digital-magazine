@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Check, Edit3, Loader2, Plus, Trash2, X } from "lucide-react";
+import { Check, Copy, Edit3, Loader2, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   allFeaturesAdminQuery,
@@ -39,6 +39,49 @@ function AdminDashboard() {
     if (error) return toast.error(error.message);
     toast.success("Feature deleted");
     qc.invalidateQueries({ queryKey: ["features"] });
+  }
+
+  async function duplicateFeature(id: string) {
+    const { data: src, error: fetchErr } = await supabase
+      .from("features")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (fetchErr || !src) return toast.error(fetchErr?.message ?? "Not found");
+    const { data: max } = await supabase
+      .from("features")
+      .select("feature_number")
+      .order("feature_number", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const nextNum = (max?.feature_number ?? 0) + 1;
+    const {
+      id: _id,
+      created_at: _c,
+      updated_at: _u,
+      feature_number: _n,
+      slug: _s,
+      view_count: _v,
+      ...rest
+    } = src as Record<string, unknown> & { id: string };
+    void _id; void _c; void _u; void _n; void _s; void _v;
+    const { data: inserted, error } = await supabase
+      .from("features")
+      .insert({
+        ...rest,
+        feature_number: nextNum,
+        title: `${(rest as { title: string }).title} (Copy)`,
+        published: false,
+        status: "draft",
+        view_count: 0,
+        slug: null,
+      })
+      .select("id")
+      .maybeSingle();
+    if (error) return toast.error(error.message);
+    toast.success(`Duplicated as Nº ${nextNum}`);
+    qc.invalidateQueries({ queryKey: ["features"] });
+    return inserted?.id;
   }
 
   return (
@@ -122,6 +165,14 @@ function AdminDashboard() {
                 >
                   <Edit3 className="size-4" />
                 </Link>
+                <button
+                  onClick={() => duplicateFeature(f.id)}
+                  className="grid size-9 place-items-center border border-white/10 text-white/70"
+                  aria-label="Duplicate"
+                  title="Duplicate as draft"
+                >
+                  <Copy className="size-4" />
+                </button>
                 <button
                   onClick={() => deleteFeature(f.id, f.feature_number)}
                   className="grid size-9 place-items-center border border-white/10 text-destructive"
