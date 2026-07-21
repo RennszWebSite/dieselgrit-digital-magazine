@@ -15,6 +15,13 @@ body {
   overscroll-behavior-y: none;
 }
 
+/* Ambient truck background base: html paints the base color so a fixed
+   element with negative z-index (the site-wide truck photo backdrop)
+   remains visible through the transparent body. */
+html {
+  background-color: #0a0a0a;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
