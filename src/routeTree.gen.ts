@@ -23,7 +23,6 @@ import { Route as FeaturesNumberRouteImport } from './routes/features.$number'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as FeaturesNumberMagazineRouteImport } from './routes/features.$number.magazine'
-import { Route as ApiPublicBootstrapAdminRouteImport } from './routes/api/public/bootstrap-admin'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminPartnersRouteImport } from './routes/_authenticated/admin.partners'
 import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin.announcements'
@@ -103,11 +102,6 @@ const FeaturesNumberMagazineRoute = FeaturesNumberMagazineRouteImport.update({
   path: '/magazine',
   getParentRoute: () => FeaturesNumberRoute,
 } as any)
-const ApiPublicBootstrapAdminRoute = ApiPublicBootstrapAdminRouteImport.update({
-  id: '/api/public/bootstrap-admin',
-  path: '/api/public/bootstrap-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedAdminSettingsRoute =
   AuthenticatedAdminSettingsRouteImport.update({
     id: '/settings',
@@ -179,7 +173,6 @@ export interface FileRoutesByFullPath {
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/api/public/bootstrap-admin': typeof ApiPublicBootstrapAdminRoute
   '/features/$number/magazine': typeof FeaturesNumberMagazineRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
@@ -202,7 +195,6 @@ export interface FileRoutesByTo {
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/api/public/bootstrap-admin': typeof ApiPublicBootstrapAdminRoute
   '/features/$number/magazine': typeof FeaturesNumberMagazineRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
@@ -229,7 +221,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/_authenticated/admin/partners': typeof AuthenticatedAdminPartnersRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/api/public/bootstrap-admin': typeof ApiPublicBootstrapAdminRoute
   '/features/$number/magazine': typeof FeaturesNumberMagazineRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/features/$id': typeof AuthenticatedAdminFeaturesIdRoute
@@ -256,7 +247,6 @@ export interface FileRouteTypes {
     | '/admin/announcements'
     | '/admin/partners'
     | '/admin/settings'
-    | '/api/public/bootstrap-admin'
     | '/features/$number/magazine'
     | '/admin/'
     | '/admin/features/$id'
@@ -279,7 +269,6 @@ export interface FileRouteTypes {
     | '/admin/announcements'
     | '/admin/partners'
     | '/admin/settings'
-    | '/api/public/bootstrap-admin'
     | '/features/$number/magazine'
     | '/admin'
     | '/admin/features/$id'
@@ -305,7 +294,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/announcements'
     | '/_authenticated/admin/partners'
     | '/_authenticated/admin/settings'
-    | '/api/public/bootstrap-admin'
     | '/features/$number/magazine'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/features/$id'
@@ -325,7 +313,6 @@ export interface RootRouteChildren {
   SubmitRoute: typeof SubmitRoute
   GiveawaysSlugRoute: typeof GiveawaysSlugRoute
   GiveawaysIndexRoute: typeof GiveawaysIndexRoute
-  ApiPublicBootstrapAdminRoute: typeof ApiPublicBootstrapAdminRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -427,13 +414,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/features/$number/magazine'
       preLoaderRoute: typeof FeaturesNumberMagazineRouteImport
       parentRoute: typeof FeaturesNumberRoute
-    }
-    '/api/public/bootstrap-admin': {
-      id: '/api/public/bootstrap-admin'
-      path: '/api/public/bootstrap-admin'
-      fullPath: '/api/public/bootstrap-admin'
-      preLoaderRoute: typeof ApiPublicBootstrapAdminRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/settings': {
       id: '/_authenticated/admin/settings'
@@ -577,7 +557,6 @@ const rootRouteChildren: RootRouteChildren = {
   SubmitRoute: SubmitRoute,
   GiveawaysSlugRoute: GiveawaysSlugRoute,
   GiveawaysIndexRoute: GiveawaysIndexRoute,
-  ApiPublicBootstrapAdminRoute: ApiPublicBootstrapAdminRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
