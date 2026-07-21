@@ -21,8 +21,8 @@ function Home() {
 
       {/* Hero */}
       <section
-        className="relative flex min-h-[600px] flex-col justify-end px-6 pb-14"
-        style={{ height: "100svh" }}
+        className="relative flex min-h-[560px] flex-col justify-end px-6 pb-10"
+        style={{ height: "88svh" }}
       >
         <div className="absolute inset-0 -z-10 overflow-hidden">
           {latest?.hero_image ? (
@@ -93,7 +93,7 @@ function Home() {
 
       {/* Latest featured */}
       {latest && (
-        <section className="border-t border-white/5 px-6 py-16">
+        <section className="border-t border-white/5 px-6 py-10">
           <div className="mb-6 flex items-end justify-between">
             <div>
               <Reveal as="p" className="text-eyebrow text-gold">Cover Story</Reveal>
@@ -136,7 +136,7 @@ function Home() {
 
       {/* Recent grid */}
       {recent.length > 0 && (
-        <section className="border-t border-white/5 px-6 py-16">
+        <section className="border-t border-white/5 px-6 py-10">
           <div className="mb-8 flex items-end justify-between">
             <div>
               <Reveal as="p" className="text-eyebrow text-gold">The Archive</Reveal>
@@ -146,7 +146,7 @@ function Home() {
               View all →
             </Link>
           </div>
-          <div className="space-y-12">
+          <div className="space-y-8">
             {recent.map((f, i) => (
               <Link
                 key={f.id}
@@ -186,7 +186,7 @@ function Home() {
       )}
 
       {/* Submit CTA */}
-      <section className="border-t border-white/5 bg-gold px-6 py-20 text-background">
+      <section className="border-t border-white/5 bg-gold px-6 py-14 text-background">
         <p className="text-eyebrow opacity-70">Built for the bold</p>
         <h2 className="mt-4 font-display text-4xl leading-[0.95] tracking-tight">
           Think your rig has what it takes?

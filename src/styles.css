@@ -174,12 +174,16 @@ body {
 
 /* Image clip-path reveal */
 .dg-clip {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 1200ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: clip-path;
+  clip-path: inset(0 0 8% 0);
+  opacity: 0.001;
+  transition:
+    clip-path 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 600ms ease-out;
+  will-change: clip-path, opacity;
 }
 .dg-clip.is-in {
   clip-path: inset(0 0 0 0);
+  opacity: 1;
 }
 
 /* Ken-Burns hero zoom */
