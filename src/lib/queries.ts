@@ -125,6 +125,30 @@ export const allFeaturesAdminQuery = () =>
     },
   });
 
+export const relatedFeaturesQuery = (
+  featureId: string,
+  opts: { category?: string | null; make?: string | null },
+) =>
+  queryOptions({
+    queryKey: ["features", "related", featureId, opts.category, opts.make],
+    queryFn: async (): Promise<Feature[]> => {
+      const filters: string[] = [];
+      if (opts.category) filters.push(`category.eq.${opts.category}`);
+      if (opts.make) filters.push(`make.eq.${opts.make}`);
+      let q = supabase
+        .from("features")
+        .select("*")
+        .eq("published", true)
+        .neq("id", featureId);
+      if (filters.length) q = q.or(filters.join(","));
+      const { data, error } = await q
+        .order("feature_number", { ascending: false })
+        .limit(4);
+      if (error) throw error;
+      return (data ?? []) as unknown as Feature[];
+    },
+  });
+
 export const submissionsQuery = () =>
   queryOptions({
     queryKey: ["submissions"],
