@@ -167,7 +167,7 @@ export const submissionsQuery = () =>
 export function publicImageUrl(path: string | null | undefined, bucket = "feature-images") {
   if (!path) return null;
   if (path.startsWith("http")) return path;
-  if (bucket !== "feature-images" && bucket !== "partner-logos") return null;
+  if (bucket !== "feature-images" && bucket !== "partner-logos" && bucket !== "submission-photos") return null;
   const params = new URLSearchParams({ bucket, path });
   return `/api/public/media?${params.toString()}`;
 }
