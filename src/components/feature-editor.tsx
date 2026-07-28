@@ -722,6 +722,11 @@ export function FeatureEditor({ initial }: { initial?: Feature }) {
       </div>
 
       <div className="sticky bottom-0 -mx-5 flex gap-2 border-t border-white/10 bg-background/95 px-5 py-4 backdrop-blur">
+        {autoSavedAt && (
+          <p className="pointer-events-none absolute -top-6 left-5 text-[10px] uppercase tracking-widest text-white/40">
+            Auto-saved locally · {new Date(autoSavedAt).toLocaleTimeString()}
+          </p>
+        )}
         <button
           disabled={saving}
           onClick={() => save(false)}
