@@ -84,6 +84,121 @@ export function FeatureEditor({ initial }: { initial?: Feature }) {
   const [captionOpen, setCaptionOpen] = useState(false);
   const [captionText, setCaptionText] = useState("");
   const [slugTouched, setSlugTouched] = useState(!!initial?.slug);
+  const [autoSavedAt, setAutoSavedAt] = useState<number | null>(null);
+  const draftKey = `dg-feature-draft:${initial?.id ?? "new"}`;
+
+  // Restore draft from localStorage (once) if present
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(draftKey);
+      if (!raw) return;
+      const d = JSON.parse(raw) as Record<string, unknown>;
+      const savedAt = typeof d.__savedAt === "number" ? d.__savedAt : 0;
+      // Only restore if newer than any server updated_at on the loaded feature
+      const serverTs = initial?.updated_at ? new Date(initial.updated_at).getTime() : 0;
+      if (savedAt <= serverTs) return;
+      if (!confirm("Restore your unsaved changes from last time?")) {
+        window.localStorage.removeItem(draftKey);
+        return;
+      }
+      if (typeof d.title === "string") setTitle(d.title);
+      if (typeof d.featureNumber === "string") setFeatureNumber(d.featureNumber);
+      if (typeof d.ownerInstagram === "string") setOwnerInstagram(d.ownerInstagram);
+      if (typeof d.truckYear === "string") setTruckYear(d.truckYear);
+      if (typeof d.make === "string") setMake(d.make);
+      if (typeof d.model === "string") setModel(d.model);
+      if (typeof d.engine === "string") setEngine(d.engine);
+      if (typeof d.story === "string") setStory(d.story);
+      if (typeof d.heroImage === "string") setHeroImage(d.heroImage);
+      if (Array.isArray(d.gallery)) setGallery(d.gallery as string[]);
+      if (Array.isArray(d.specs)) setSpecs(d.specs as SpecRow[]);
+      if (Array.isArray(d.sponsors)) setSponsors(d.sponsors as SponsorRow[]);
+      if (typeof d.slug === "string") setSlug(d.slug);
+      if (typeof d.seoTitle === "string") setSeoTitle(d.seoTitle);
+      if (typeof d.seoDescription === "string") setSeoDescription(d.seoDescription);
+      if (typeof d.instagramPostUrl === "string") setInstagramPostUrl(d.instagramPostUrl);
+      if (typeof d.category === "string") setCategory(d.category);
+      if (Array.isArray(d.partnerIds)) setPartnerIds(d.partnerIds as string[]);
+      if (typeof d.slugTouched === "boolean") setSlugTouched(d.slugTouched);
+      setAutoSavedAt(savedAt);
+      toast.success("Draft restored");
+    } catch {
+      /* ignore corrupted draft */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Autosave to localStorage (debounced)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handle = window.setTimeout(() => {
+      try {
+        const payload = {
+          __savedAt: Date.now(),
+          title,
+          featureNumber,
+          ownerInstagram,
+          truckYear,
+          make,
+          model,
+          engine,
+          story,
+          heroImage,
+          gallery,
+          specs,
+          sponsors,
+          slug,
+          slugTouched,
+          seoTitle,
+          seoDescription,
+          instagramPostUrl,
+          category,
+          partnerIds,
+        };
+        window.localStorage.setItem(draftKey, JSON.stringify(payload));
+        setAutoSavedAt(payload.__savedAt);
+      } catch {
+        /* quota exceeded etc — ignore */
+      }
+    }, 600);
+    return () => window.clearTimeout(handle);
+  }, [
+    draftKey,
+    title,
+    featureNumber,
+    ownerInstagram,
+    truckYear,
+    make,
+    model,
+    engine,
+    story,
+    heroImage,
+    gallery,
+    specs,
+    sponsors,
+    slug,
+    slugTouched,
+    seoTitle,
+    seoDescription,
+    instagramPostUrl,
+    category,
+    partnerIds,
+  ]);
+
+  // Warn on tab close if the current form differs from last-saved server state
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handler = (e: BeforeUnloadEvent) => {
+      // If there's a draft newer than server, warn
+      const raw = window.localStorage.getItem(draftKey);
+      if (!raw) return;
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [draftKey]);
 
   // Load partner ids for existing feature
   const { data: existingPartnerIds } = useQuery({
@@ -251,6 +366,12 @@ export function FeatureEditor({ initial }: { initial?: Feature }) {
       qc.invalidateQueries({ queryKey: ["features"] });
       qc.invalidateQueries({ queryKey: ["feature_partners"] });
       setPublished(publish);
+      // Clear local autosave — server is now source of truth
+      try {
+        window.localStorage.removeItem(draftKey);
+      } catch {
+        /* ignore */
+      }
       navigate({ to: "/admin" });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Save failed");
